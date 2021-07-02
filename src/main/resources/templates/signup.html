@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instagram</title>
+    <link href="/style/signup.css" rel="stylesheet" type="text/css" />
+    <link href="/style/login.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="container">
+    <img class="logo_instagram" src="/img/logo_text.png" alt="instagram_logo">
+    <form action="/signup" method="post">
+        <input type="email" class="input_signup" name="email" id="email" placeholder="이메일 주소" required="required"  maxlength="30"/>
+        <input type="password" class="input_signup" name="password" id="password" placeholder="비밀번호" required="required" />
+        <input type="text" class="input_signup" name="phone" id="phone" placeholder="전화번호" required="required" />
+        <input type="text" class="input_signup" name="name" id="name" placeholder="성명" required="required" />
+        <button id="btn_signup" disabled>가입</button>
+    </form>
+    <a href="/login" class="button_login">계정이 있으신가요?  로그인</a>
+</div>
+<script src="/js/signup.js"></script>
+</body>
+</html>
