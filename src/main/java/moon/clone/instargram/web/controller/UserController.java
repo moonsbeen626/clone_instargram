@@ -18,7 +18,6 @@ public class UserController {
         if(userService.save(user)) {
             return "redirect:/login";
         } else {
-            //model.addAttribute("msg", "이미 존재하는 이메일");
             return "redirect:/signup?error";
         }
     }

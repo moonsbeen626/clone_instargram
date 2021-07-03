@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
         if(userRepository.findUserByEmail(user.getEmail()) != null) return false;
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//패스워드 암호화
-        user.setPassword(encoder.encode(user.getPassword()));
+        user.setPassword("{bcrypt}" +encoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
