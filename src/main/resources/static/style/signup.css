@@ -52,3 +52,7 @@
 .button_login:hover {
     cursor: pointer;
 }
+
+.email_input_check {
+    color: red;
+}

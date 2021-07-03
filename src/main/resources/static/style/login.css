@@ -1,6 +1,6 @@
 .container {
     width: 350px;
-    height: 430px;
+    height: 440px;
     margin: 100px auto;
     display: flex;
     flex-direction: column;
@@ -8,13 +8,14 @@
     flex-wrap: wrap;
     background-color: #fff;
     border: 1px solid #DBDBDB;
+    text-align: center;
 }
 img.logo_instagram {
     align-self: center;
     width: 175px;
     margin: 35px 0;
 }
-.input_login {
+.username {
     width: 270px;
     height: 40px;
     margin: 3px auto;
@@ -25,11 +26,30 @@ img.logo_instagram {
     border-radius: 3px;
     font-size: 14px;
 }
-.input_login::placeholder {
+.username::placeholder {
     font-size: 12px;
     color: #8e8e8e;
 }
-.input_login:focus {
+.username:focus {
+    border: 1px solid #8a8a8a;
+    outline: none;
+}
+.password {
+    width: 270px;
+    height: 40px;
+    margin: 3px auto;
+    padding: 0 10px;
+    display: block;
+    background-color: #fafafa;
+    border: 1px solid #DBDBDB;
+    border-radius: 3px;
+    font-size: 14px;
+}
+.password::placeholder {
+    font-size: 12px;
+    color: #8e8e8e;
+}
+.password:focus {
     border: 1px solid #8a8a8a;
     outline: none;
 }
@@ -94,5 +114,9 @@ img.logo_facebook {
     align-self: center;
     width: 20px;
     vertical-align: bottom;
+}
+
+.login_input_check {
+    color: red;
 }
 

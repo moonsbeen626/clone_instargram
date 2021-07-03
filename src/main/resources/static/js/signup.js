@@ -26,3 +26,4 @@ loginInput.addEventListener('keyup', function(event) {
     const completedInput = (emailCheck() && pwCheck() && phoneCheck() && nameCheck());
     signupBtn.disabled = completedInput ? false : true;
 })
+
