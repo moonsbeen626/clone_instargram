@@ -1,5 +1,5 @@
-const idInput = document.getElementById('userID');
-const pwInput = document.getElementById('userPW');
+const idInput = document.getElementById('username');
+const pwInput = document.getElementById('password');
 const loginInput = document.getElementsByClassName('container')[0];
 const loginBtn = document.getElementById('btn_login');
 
@@ -17,8 +17,3 @@ loginInput.addEventListener('keyup', function(event) {
     loginBtn.disabled = completedInput ? false : true;
 })
 
-document.addEventListener('keyup', function(event) {
-    if (event.keyCode === 13) {
-        loginBtn.click();
-    }
-})
