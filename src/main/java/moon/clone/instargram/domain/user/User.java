@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,5 +21,13 @@ public class User {
     private String password;
     private String phone;
     private String name;
+
+    @Builder
+    public User(String email, String password, String phone, String name) {
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.name = name;
+    }
 
 }
