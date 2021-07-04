@@ -61,7 +61,7 @@ public class UserService implements UserDetailsService {
      * @return 해당 email을 가진  user 객체
      */
     @Transactional
-    public User getCurrentUserInfo(String email) {
+    public User getUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
         return user;
     }
@@ -75,9 +75,12 @@ public class UserService implements UserDetailsService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//패스워드 암호화
         user.setPassword("{bcrypt}" +encoder.encode(user.getPassword()));
 
-        User newUser = userRepository.findUserByEmail(user.getEmail()); //기존의 정보를 가져온다.
-        user.setProfileImgUrl(newUser.getProfileImgUrl());
-
         userRepository.save(user);
+    }
+
+    @Transactional
+    public User getUserById(Long id) {
+        User user = userRepository.findUserById(id);
+        return user;
     }
 }

@@ -2,7 +2,21 @@
 <html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/common :: head('Instargram')"></head>
 <body>
-<nav th:replace="layout/common :: menu('menu')"></nav>
+<nav th:fragment="menu(menu)">
+    <div class="nav-container">
+        <div class="nav-1">
+            <img class="logo_instagram" src="/img/logo_text.png" alt="logo_text">
+        </div>
+        <input id="searchInput" type="search" class="input-search" placeholder="검색">
+        <div class="nav-2">
+            <a href="/story"><img src="/img/home.png" alt="홈"></a>
+            <img src="/img/dm.png" alt="DM">
+            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
+            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
+            <a th:href="@{/user/profile(id=${user.id})}" ><img class="pic" src="/img/sample.jpg"  alt="마이페이지"></a>
+        </div>
+    </div>
+</nav>
 <!--프로필 섹션-->
 <main class="profile_main">
 <section class="profile">
