@@ -23,8 +23,6 @@ import java.util.Map;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserService userService;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -37,22 +35,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/loginForm")
                 .defaultSuccessUrl("/story");
     }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.eraseCredentials(false).userDetailsService(userService).passwordEncoder(delegatingPasswordEncoder());
-//    }
-//
-//    @Bean
-//    public PasswordEncoder delegatingPasswordEncoder() {
-//        PasswordEncoder defaultEncoder = new StandardPasswordEncoder();
-//        Map<String, PasswordEncoder> encoders = new HashMap<>();
-//        encoders.put("bcrypt", new BCryptPasswordEncoder());
-//
-//        DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder(
-//                "bcrypt", encoders);
-//        passwordEncoder.setDefaultPasswordEncoderForMatches(defaultEncoder);
-//
-//        return passwordEncoder;
-//    }
 }

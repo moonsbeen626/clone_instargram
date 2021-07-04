@@ -17,6 +17,20 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Spring Security 필수 메소드
+     * @param username 입력받은 사용자 이메일 정보
+     * @return UserLogin 시큐리티 메타 정보를 포함한 user정보
+     * @throws UsernameNotFoundException
+     */
+    @Override
+    public UserLogin loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByEmail(username);
+
+        if(user != null) {
+            return new UserLogin(user);
+        } else throw new UsernameNotFoundException(username);
+    }
 
     /**
      * 회원정보 저장
@@ -31,20 +45,5 @@ public class UserService implements UserDetailsService {
         user.setPassword("{bcrypt}" +encoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
-    }
-
-    /**
-     * Spring Security 필수 메소드
-     * @param username 입력받은 사용자 이메일 정보
-     * @return UserLogin 시큐리티 메타 정보를 포함한 user정보
-     * @throws UsernameNotFoundException
-     */
-    @Override
-    public UserLogin loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(username);
-
-        if(user != null) {
-            return new UserLogin(user);
-        } else throw new UsernameNotFoundException(username);
     }
 }
