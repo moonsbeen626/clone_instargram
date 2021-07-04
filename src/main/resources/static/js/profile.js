@@ -9,8 +9,7 @@ function closePopup(obj) {
     $(obj).css("display", "none");
 }
 
-
-// (5) 사용자 정보(회원정보, 로그아웃, 닫기) 모달
+// 사용자 정보(회원정보, 로그아웃, 닫기) 모달
 function modalInfo() {
     $(".modal-info").css("display", "none");
 }

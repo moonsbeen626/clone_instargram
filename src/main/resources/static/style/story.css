@@ -15,6 +15,10 @@ footer p {
 .pic {
     border-radius: 100%;
 }
+.pic:enabled:hover {
+    cursor: pointer;
+}
+
 span.userID {
     margin-right: 5px;
 }
@@ -36,6 +40,7 @@ nav {
     justify-content: center;
     background-color: white;
     border-bottom: 1px solid #DBDBDB;
+    z-index: 100;
 }
 .nav-container {
     max-width: 1000px;
@@ -126,9 +131,9 @@ article, .section-story, .section-recommend {
     border-radius: 3px;
     border: 1px solid #DBDBDB;
 }
-article {
-    margin-bottom: 60px;
-}
+/*article {*/
+/*    margin-bottom: 60px;*/
+/*}*/
 .section-story, .section-recommend {
     width: 310px;
     padding: 14px 16px;
@@ -201,6 +206,7 @@ header {
 .liked-people img {
     display: inline-block;
     margin-right: 4px;
+    margin-top: 5px;
     width: 20px;
     height: 20px;
     border: 1px solid #fafafa;

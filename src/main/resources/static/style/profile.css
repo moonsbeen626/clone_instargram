@@ -7,6 +7,13 @@
     height: 100%;
 }
 
+.profile_main {
+    width: 960px;
+    margin: 0 auto;
+    padding-top: 50px;
+    padding-bottom: 40px;
+}
+
 /* Profile */
 .profile {
     height: 300px;
@@ -14,7 +21,7 @@
     /*margin: 54px 0 44px;*/
 }
 .profile > .profileContainer {
-    padding: 10px 20px 0;
+    padding: 10px 10px 0;
 }
 .profile .profile-left,
 .profile .profile-right {
@@ -31,16 +38,15 @@
 }
 .profile .profile-left {
     width: 162px;
-    height: 162px;
-    padding: 6px;
+    height: 200px;
     border-radius: 50%;
     position: relative;
     align-content: center;
     cursor: pointer;
 }
 .profile-img-wrap {
-    width: 162px;
-    height: 162px;
+    width: 200px;
+    height: 200px;
     padding: 6px;
     border-radius: 50%;
     position: center;
@@ -53,6 +59,7 @@
     height: 100%;
     border-radius: 50%;
     align-content: center;
+    z-index: 1;
 }
 .profile .profile-right .name-group {
     display: flex;
@@ -76,6 +83,10 @@
     border: none;
     background: none;
 }
+.modi:enabled:hover {
+    cursor: pointer;
+}
+
 .profile .profile-right .name-group .modi i {
     font-size: 20px;
     padding: 8px;
@@ -269,6 +280,7 @@
 
 .profile-image {
     border: 2px solid gray;
+    z-index: 1;
 }
 
 .modal-image {

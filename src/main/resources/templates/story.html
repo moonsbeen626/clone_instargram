@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <head th:replace="layout/common :: head('Instargram')"></head>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/common :: head('Instargram')"></head>
 <body>
 <nav th:replace="layout/common :: menu('menu')"></nav>
 <!-- main -->
@@ -12,8 +10,8 @@
         <article>
             <header>
                 <div class="profile-of-article">
-                    <img class="img-profile pic" src="img/sample.jpg" alt="sample님의 프로필 사진">
-                    <span class="userID main-id point-span">sample</span>
+                    <a href="#"><img class="img-profile pic" src="img/sample.jpg"></a>
+                    <span class="userID main-id point-span" > sample </span>
                 </div>
                 <img class="icon-react icon-more" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/more.png" alt="more">
             </header>
@@ -31,7 +29,7 @@
             <!-- article text data -->
             <div class="reaction">
                 <div class="liked-people">
-                    <img class="pic" src="img/sample.jpg" alt="sample님의 프로필 사진">
+                    <a href="#"><img class="pic" src="img/sample.jpg" alt="sample님의 프로필 사진"></a>
                     <p><span class="point-span">sample</span>님 <span class="point-span">외 2,412,751명</span>이 좋아합니다</p>
                 </div>
                 <div class="description">
@@ -43,7 +41,6 @@
                             <span><span class="point-span userID">sample</span>내가 입으면 더 잘어울릴 것 같아</span>
                             <img class="comment-heart" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
                         </li>
-                        <!-- input 값 여기에 추가 -->
                     </ul>
                 </div>
             </div>
@@ -53,58 +50,13 @@
                 <button type="submit" class="submit-comment" disabled>게시</button>
             </div>
         </article>
-        <article>
-            <header>
-                <div class="profile-of-article">
-                    <img class="img-profile pic" src="img/sample.jpg" alt="sample님의 프로필 사진">
-                    <span class="userID main-id point-span">sample</span>
-                </div>
-                <img class="icon-react icon-more" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/more.png" alt="more">
-            </header>
-            <div class="main-image">
-                <img src="img/sample.jpg" alt="sample님의 피드 사진" class="mainPic">
-            </div>
-            <div class="icons-react">
-                <div class="icons-left">
-                    <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-                    <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/comment.png" alt="말풍선">
-                    <img class="icon-react" src="img/dm.png" alt="DM">
-                </div>
-                <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/bookmark.png" alt="북마크">
-            </div>
-            <!-- article text data -->
-            <div class="reaction">
-                <div class="liked-people">
-                    <img class="pic" src="img/sample.jpg" alt="sample님의 프로필 사진">
-                    <p><span class="point-span">sample</span>님 <span class="point-span">외 4,612,203명</span>이 좋아합니다</p>
-                </div>
-                <div class="description">
-                    <p><span class="point-span userID">sample</span>코로나 언제 사라지나 ㅠㅠ 여행 가고 싶다~~</p>
-                </div>
-                <div class="comment-section">
-                    <ul class="comments">
-                        <li>
-                            <span><span class="point-span userID">sample</span>나도 호주 가고 싶다!</span>
-                            <img class="comment-heart" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-                        </li>
-                        <!-- input 값 여기에 추가 -->
-                    </ul>
-                </div>
-            </div>
-            <div class="hl"></div>
-            <div class="comment">
-                <input id="input-comment2" class="input-comment" type="text" placeholder="댓글 달기..." >
-                <button type="submit" class="submit-comment" disabled>게시</button>
-            </div>
-        </article>
-
     </div>
     <!-- main-right -->
     <div class="main-right">
         <div class="myProfile">
-            <img class="pic" src="img/sample.jpg" alt="sample님의 프로필 사진">
+            <a href="/user/profile"><img class="pic" src="img/sample.jpg"></a>
             <div>
-                <span class="userID point-span">sample</span>
+                <span class="userID point-span" sec:authentication="name" ></span>
                 <span class="sub-span">sample</span>
             </div>
         </div>

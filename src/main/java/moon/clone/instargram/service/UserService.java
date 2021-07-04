@@ -42,8 +42,42 @@ public class UserService implements UserDetailsService {
         if(userRepository.findUserByEmail(user.getEmail()) != null) return false;
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//패스워드 암호화
-        user.setPassword("{bcrypt}" +encoder.encode(user.getPassword()));
-        userRepository.save(user);
+        user.setPassword("{bcrypt}" + encoder.encode(user.getPassword()));
+        userRepository.save(User.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .phone(user.getPhone())
+                .name(user.getName())
+                .title(null)
+                .website(null)
+                .profileImgUrl("/img/default_profile.jpg")
+                .build());
         return true;
+    }
+
+    /**
+     * email을 가진 사용자 정보 반환
+     * @param email 사용자 email
+     * @return 해당 email을 가진  user 객체
+     */
+    @Transactional
+    public User getCurrentUserInfo(String email) {
+        User user = userRepository.findUserByEmail(email);
+        return user;
+    }
+
+    /**
+     * 사용자 정보 업데이트
+     * @param user 업데이트 할 사용자 정보
+     */
+    @Transactional
+    public void update(User user) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//패스워드 암호화
+        user.setPassword("{bcrypt}" +encoder.encode(user.getPassword()));
+
+        User newUser = userRepository.findUserByEmail(user.getEmail()); //기존의 정보를 가져온다.
+        user.setProfileImgUrl(newUser.getProfileImgUrl());
+
+        userRepository.save(user);
     }
 }

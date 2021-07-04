@@ -27,8 +27,4 @@ public class IndexController {
         return "story";
     }
 
-    @GetMapping("/profile")
-    public String profile() {
-        return "profile";
-    }
 }

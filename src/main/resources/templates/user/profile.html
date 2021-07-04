@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <head th:replace="layout/common :: head('Instargram')"></head>
-</head>
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/common :: head('Instargram')"></head>
 <body>
 <nav th:replace="layout/common :: menu('menu')"></nav>
 <!--프로필 섹션-->
-<main>
+<main class="profile_main">
 <section class="profile">
     <!--유저정보 컨테이너-->
     <div class="profileContainer">
@@ -23,21 +21,19 @@
         <!--유저정보 및 사진등록 구독하기-->
         <div class="profile-right">
             <div class="name-group">
-                <h2>myname</h2>
+                <h2 sec:authentication="name" ></h2>
                 <button class="cta">사진등록</button>
                 <button class="cta">구독하기</button>
                 <!--<button class="cta blue" >구독취소</button>-->
-                <button class="modi" >
+                <button class="modi" onclick="popup('.modal-info')">
                     <i class="fas fa-cog"></i>
                 </button>
             </div>
 
             <div class="subscribe">
                 <ul>
-                    <li><a href=""> 게시물<span>0</span>
-                    </a></li>
-                    <li> 구독정보<span>0</span>
-                    </a></li>
+                    <li>게시물<span>0</span></li>
+                    <li>구독정보<span>0</span></li>
                 </ul>
             </div>
             <div class="state">
@@ -106,9 +102,9 @@
 <!--로그아웃, 회원정보변경 모달-->
 <div class="modal-info" >
     <div class="modal">
-        <button>회원정보 변경</button>
-        <button>로그아웃</button>
-        <button>취소</button>
+        <button onclick="location.href='/user/update'">회원정보 변경</button>
+        <button >로그아웃</button>
+        <button onclick="closePopup('.modal-info')">취소</button>
     </div>
 </div>
 <!--로그아웃, 회원정보변경 모달 end-->
