@@ -2,6 +2,7 @@ package moon.clone.instargram.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.user.User;
+import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import java.security.Principal;
 public class IndexController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @GetMapping("/") // session 여부에 따라 로그인 페이지로 이동할지, 메인 페이지로 이동할지 결정하도록 변경해야함.
     public String index() {
@@ -37,9 +39,8 @@ public class IndexController {
     //메인 sroty화면으로 이동
     @GetMapping("/story")
     public String story(Authentication authentication, Model model) {
-        User user = userService.getUserByEmail(authentication.getName());
+        User user = userRepository.findUserByEmail(authentication.getName());
         model.addAttribute("user", user);
         return "story";
     }
-
 }

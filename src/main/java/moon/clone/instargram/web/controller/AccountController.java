@@ -3,6 +3,7 @@ package moon.clone.instargram.web.controller;
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AccountController {
 
+    @Autowired
     UserService userService;
 
     //회원가입

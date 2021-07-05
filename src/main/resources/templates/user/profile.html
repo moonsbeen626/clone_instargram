@@ -13,7 +13,7 @@
             <img src="/img/dm.png" alt="DM">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-            <a th:href="@{/user/profile(id=${user.id})}" ><img class="pic" src="/img/sample.jpg"  alt="마이페이지"></a>
+            <a th:href="@{/user/profile(id=${userDto.loginId})}" ><img class="pic" th:src="${userDto.user.profileImgUrl}"  alt="마이페이지"></a>
         </div>
     </div>
 </nav>
@@ -28,18 +28,18 @@
                 <form id="userProfileImageForm">
                     <input type="file" name="profileImageFile" style="display: none;" id="userProfileImageInput" />
                 </form>
-                <img class="profile-image" src="/img/sample.jpg" />
+                <img class="profile-image" th:src="${userDto.user.profileImgUrl}" />
             </div>
         </div>
         <!--유저이미지end-->
         <!--유저정보 및 사진등록 구독하기-->
         <div class="profile-right">
             <div class="name-group">
-                <h2 sec:authentication="name" ></h2>
-                <button class="cta">사진등록</button>
-                <button class="cta">구독하기</button>
-                <!--<button class="cta blue" >구독취소</button>-->
-                <button class="modi" onclick="popup('.modal-info')">
+                <h2 th:text="${userDto.user.email}" ></h2>
+                <button class="cta" th:if="${userDto.loginUser}">사진등록</button>
+<!--                <button class="cta" th:if="!${isUser} and !${isFollow}" th:onclick="|toggleSubscribe(${LoginId}, ${user.id}, this)|">팔로우</button>-->
+<!--                <button class="cta" th:if="!${isUser} and ${isFollow}" th:onclick="|toggleSubscribe(${LoginId}, ${user.id}, this)|">언팔로우</button>-->
+                <button class="modi" th:if="${userDto.loginUser}" onclick="popup('.modal-info')">
                     <i class="fas fa-cog"></i>
                 </button>
             </div>
@@ -47,12 +47,12 @@
             <div class="subscribe">
                 <ul>
                     <li>게시물<span>0</span></li>
-                    <li>구독정보<span>0</span></li>
+                    <li>구독정보<span>0</span>
                 </ul>
             </div>
             <div class="state">
-                <h4>hello</h4>
-                <h4>hello</h4>
+                <h4 th:text="${userDto.user.title}"></h4>
+                <h4 th:text="${userDto.user.website}"></h4>
             </div>
         </div>
         <!--유저정보 및 사진등록 구독하기 end-->
@@ -67,16 +67,6 @@
             <!--게시물컨 그리드배열-->
             <div class="tab-1-content-inner">
                 <!--아이템들-->
-                <c:forEach var="image" items="${dto.user.images}"> <!-- EL표현식에서 변수명을 적으면 get함수가 자동 호출된다. -->
-                    <div class="img-box">
-                        <a href=""> <img src="/img/sample.jpg" />
-                        </a>
-                        <div class="comment">
-                            <a href="#" class=""> <i class="fas fa-heart"></i><span>${image.likeCount}</span>
-                            </a>
-                        </div>
-                    </div>
-                </c:forEach>
                 <c:forEach var="image" items="${dto.user.images}"> <!-- EL표현식에서 변수명을 적으면 get함수가 자동 호출된다. -->
                     <div class="img-box">
                         <a href=""> <img src="/img/sample.jpg" />

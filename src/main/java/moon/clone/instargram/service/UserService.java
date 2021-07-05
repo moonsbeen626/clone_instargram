@@ -2,8 +2,11 @@ package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.config.auth.UserLogin;
+import moon.clone.instargram.domain.follow.FollowRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
+import moon.clone.instargram.web.dto.UserProfileDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +19,7 @@ import javax.transaction.Transactional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
 
     /**
      * Spring Security 필수 메소드
@@ -56,17 +60,6 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * email을 가진 사용자 정보 반환
-     * @param email 사용자 email
-     * @return 해당 email을 가진  user 객체
-     */
-    @Transactional
-    public User getUserByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
-        return user;
-    }
-
-    /**
      * 사용자 정보 업데이트
      * @param user 업데이트 할 사용자 정보
      */
@@ -79,8 +72,21 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User getUserById(Long id) {
-        User user = userRepository.findUserById(id);
-        return user;
+    public UserProfileDto getProfile(long currentId, String loginEmail) {
+        UserProfileDto userProfileDto = new UserProfileDto();
+
+        // 현재 id에 해당하는 user정보 반환
+        User user = userRepository.getById(currentId);
+        userProfileDto.setUser(user);
+
+        // loginEmail 활용하여 currentId가 로그인된 사용자 인지 확인
+        User loginUser = userRepository.findUserByEmail(loginEmail);
+        userProfileDto.setLoginUser(loginUser.getId() == user.getId());
+        userProfileDto.setLoginId(loginUser.getId());
+
+        // currentId를 가진 user가 loginEmail을 가진 user를 구독 했는지 확인
+        userProfileDto.setFollow(followRepository.findFollowByFromUserAndToUser(user, loginUser) != null);
+
+        return userProfileDto;
     }
 }

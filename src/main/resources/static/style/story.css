@@ -14,6 +14,7 @@ footer p {
 }
 .pic {
     border-radius: 100%;
+    object-fit: cover;
 }
 .pic:enabled:hover {
     cursor: pointer;
@@ -69,6 +70,8 @@ nav img {
 }
 .nav-2 img {
     margin-left: 20px;
+    width: 28px;
+    height: 28px;
 }
 .input-search {
     width: 200px;
