@@ -1,14 +1,13 @@
 package moon.clone.instargram.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import moon.clone.instargram.domain.user.User;
+
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Data
 public class UserProfileDto {
     private long loginId;

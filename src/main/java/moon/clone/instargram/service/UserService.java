@@ -2,6 +2,7 @@ package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.config.auth.UserLogin;
+import moon.clone.instargram.domain.follow.Follow;
 import moon.clone.instargram.domain.follow.FollowRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
@@ -75,7 +76,7 @@ public class UserService implements UserDetailsService {
     public UserProfileDto getProfile(long currentId, String loginEmail) {
         UserProfileDto userProfileDto = new UserProfileDto();
 
-        // 현재 id에 해당하는 user정보 반환
+        // 현재 id에 해당하는 user정보
         User user = userRepository.getById(currentId);
         userProfileDto.setUser(user);
 
@@ -85,7 +86,7 @@ public class UserService implements UserDetailsService {
         userProfileDto.setLoginId(loginUser.getId());
 
         // currentId를 가진 user가 loginEmail을 가진 user를 구독 했는지 확인
-        userProfileDto.setFollow(followRepository.findFollowByFromUserAndToUser(user, loginUser) != null);
+        userProfileDto.setFollow(followRepository.findFollowByFromUserAndToUser(loginUser, user) != null);
 
         return userProfileDto;
     }

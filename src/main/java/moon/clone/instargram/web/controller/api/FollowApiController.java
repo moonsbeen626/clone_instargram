@@ -24,7 +24,7 @@ public class FollowApiController {
      * @return 새로 생성된 follow 객체
      */
     @PostMapping("/follow/{fromUserId}/{toUserId}")
-    public Follow followUser(@PathVariable Long fromUserId, @PathVariable Long toUserId) {
+    public Follow followUser(@PathVariable long fromUserId, @PathVariable Long toUserId) {
         User fromUser = userRepository.findUserById(fromUserId);
         User toUser = userRepository.findUserById(toUserId);
 
@@ -37,7 +37,7 @@ public class FollowApiController {
     }
 
     @DeleteMapping("follow/{fromUserId}/{toUserId}")
-    void unFollowUser(@PathVariable Long fromUserId, @PathVariable Long toUserId) {
+    void unFollowUser(@PathVariable Long fromUserId, @PathVariable long toUserId) {
         Long id = followService.getFollowId(fromUserId, toUserId);
         followRepository.deleteById(id);
     }

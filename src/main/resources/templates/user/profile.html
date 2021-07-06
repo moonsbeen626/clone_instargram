@@ -34,11 +34,12 @@
         <!--유저이미지end-->
         <!--유저정보 및 사진등록 구독하기-->
         <div class="profile-right">
-            <div class="name-group">
+            <div class="name-group" >
                 <h2 th:text="${userDto.user.email}" ></h2>
                 <button class="cta" th:if="${userDto.loginUser}">사진등록</button>
-<!--                <button class="cta" th:if="!${isUser} and !${isFollow}" th:onclick="|toggleSubscribe(${LoginId}, ${user.id}, this)|">팔로우</button>-->
-<!--                <button class="cta" th:if="!${isUser} and ${isFollow}" th:onclick="|toggleSubscribe(${LoginId}, ${user.id}, this)|">언팔로우</button>-->
+                <span></span>
+                <button class="cta" th:if="!${userDto.loginUser} and !${userDto.follow}" th:onclick="|toggleSubscribe(${userDto.loginId}, ${userDto.user.id}, this)|">팔로우</button>
+                <button class="cta" th:if="!${userDto.loginUser} and ${userDto.follow}" th:onclick="|toggleSubscribe(${userDto.loginId}, ${userDto.user.id}, this)|">언팔로우</button>
                 <button class="modi" th:if="${userDto.loginUser}" onclick="popup('.modal-info')">
                     <i class="fas fa-cog"></i>
                 </button>
@@ -136,6 +137,7 @@
 </div>
 <footer th:replace="layout/common :: footer('footer')"></footer>
 </main>
-<script src="/js/profile.js"></script>
+<script src="/js/profile.js">
+</script>
 </body>
 </html>
