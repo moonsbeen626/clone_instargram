@@ -70,7 +70,7 @@
         <div class="myProfile">
             <a th:href="@{/user/profile(id=${user.id})}" ><img class="pic" th:src="${user.profileImgUrl}" ></a>
             <div>
-                <span class="userID point-span" th:text="${user.email}"></span>
+                <span class="userID point-span" th:text="${user.name}"></span>
                 <span class="sub-span" th:text="${user.title}"></span>
             </div>
         </div>
