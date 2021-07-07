@@ -6,14 +6,16 @@ import moon.clone.instargram.domain.follow.Follow;
 import moon.clone.instargram.domain.follow.FollowRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
-import moon.clone.instargram.web.dto.UserProfileDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import moon.clone.instargram.web.dto.follow.FollowDto;
+import moon.clone.instargram.web.dto.user.UserDto;
+import moon.clone.instargram.web.dto.user.UserProfileDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -72,6 +74,12 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    /**
+     * UserProfileDto 정보 반환
+     * @param currentId 현재 접속한 profile 페이지의 사용자
+     * @param loginEmail 로그인한 사용자의 email
+     * @return currentId에 해당하는 user profile정보 반환
+     */
     @Transactional
     public UserProfileDto getProfile(long currentId, String loginEmail) {
         UserProfileDto userProfileDto = new UserProfileDto();
@@ -88,6 +96,30 @@ public class UserService implements UserDetailsService {
         // currentId를 가진 user가 loginEmail을 가진 user를 구독 했는지 확인
         userProfileDto.setFollow(followRepository.findFollowByFromUserAndToUser(loginUser, user) != null);
 
+        //currentId를 가진 user의 팔로워, 팔로잉 수를 확인한다.
+        userProfileDto.setUserFollowerCount(followRepository.findFollowerCountById(currentId));
+        userProfileDto.setUserFollowingCount(followRepository.findFollowingCountById(currentId));
+
         return userProfileDto;
     }
+
+    /**
+     * UserDto 정보 반환
+     * @param email 사용자의 email 정보
+     * @return 로그인한 사용자의 UserDto
+     */
+    @Transactional
+    public UserDto getUserDtoByEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+
+        return UserDto.builder()
+                .id(user.getId())
+                .email(email)
+                .name(user.getName())
+                .title(user.getTitle())
+                .website(user.getWebsite())
+                .profileImgUrl(user.getProfileImgUrl())
+                .build();
+    }
+
 }

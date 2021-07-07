@@ -3,11 +3,9 @@ package moon.clone.instargram.web.controller;
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
-import moon.clone.instargram.service.FollowService;
 import moon.clone.instargram.service.UserService;
-import moon.clone.instargram.web.dto.UserProfileDto;
+import moon.clone.instargram.web.dto.user.UserProfileDto;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -19,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
 
 @RequiredArgsConstructor
 @Controller
@@ -32,11 +29,11 @@ public class UserController {
     @GetMapping("/user/profile")
     public String profile(Model model, @RequestParam Long id, Authentication authentication) {
         UserProfileDto userProfileDto = userService.getProfile(id, authentication.getName());
-        model.addAttribute("userDto", userProfileDto);
+        model.addAttribute("userProfileDto", userProfileDto);
         return "user/profile";
     }
 
-    //사용자 정보 수정 페이지로 이동
+    //사용자 정보 수정 페이지로 이동 -> dto로 수정 필요
     @GetMapping("/user/update")
     public String update(Authentication authentication, Model model) {
         User user = userRepository.findUserByEmail(authentication.getName());

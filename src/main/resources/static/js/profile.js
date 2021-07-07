@@ -1,9 +1,9 @@
-// (1) 유저 프로파일 페이지 구독하기, 구독취소
-function toggleSubscribe(fromUserId, toUserId, obj) {
+
+function toggleSubscribe(toUserId, obj) {
     if ($(obj).text() === "언팔로우") {
         $.ajax({
             type: "delete",
-            url: "/api/follow/" + fromUserId + "/" + toUserId,
+            url: "/api/follow/" + toUserId,
             dataType: "text"
         }).done(res => {
             $(obj).text("팔로우");
@@ -14,7 +14,7 @@ function toggleSubscribe(fromUserId, toUserId, obj) {
     } else {
         $.ajax({
             type: "post",
-            url: "/api/follow/" + fromUserId + "/" + toUserId,
+            url: "/api/follow/" + toUserId,
             dataType: "text"
         }).done(res => {
             $(obj).text("언팔로우");
@@ -24,7 +24,65 @@ function toggleSubscribe(fromUserId, toUserId, obj) {
         });
     }
 }
-// (4) 사용자 정보 메뉴 열기 닫기
+
+function followerInfoModalOpen(profileId) {
+    $(".modal-follower").css("display", "flex");
+
+    $.ajax({
+        url: `/api/follow/${profileId}/follower`,
+        dataType: "json"
+    }).done(res => {
+        console.log(res.toString());
+
+        res.forEach((follow) => {
+            let item = getfollowModalItem(follow);
+            $("#followerModalList").append(item);
+        });
+    }).fail(error => {
+        console.log("구독정보 불러오기 오류", error);
+    });
+}
+function followingInfoModalOpen(profileId) {
+    $(".modal-following").css("display", "flex");
+
+    $.ajax({
+        url: `/api/follow/${profileId}/following`,
+        dataType: "json"
+    }).done(res => {
+        console.log(res.toString());
+
+        res.forEach((follow) => {
+            let item = getfollowModalItem(follow);
+            $("#followingModalList").append(item);
+        });
+    }).fail(error => {
+        console.log("구독정보 불러오기 오류", error);
+    });
+}
+function getfollowModalItem(follow) {
+    let item = `<div class="subscribe__item" id="subscribeModalItem-${follow.id}">
+	<div class="subscribe__img">
+		<img src="${follow.profileImgUrl}" />
+	</div>
+	<div class="subscribe__text">
+		<h2>${follow.name}</h2>
+	</div>
+	<div class="subscribe__btn">`;
+    if(!follow.loginUser){
+        if(follow.followState){
+            item += `<button class="cta-follow blue" onclick="toggleSubscribe(${follow.id}, this)">언팔로우</button>`;
+        }else{
+            item += `<button class="cta-follow" onclick="toggleSubscribe(${follow.id}, this)">팔로우</button>`;
+        }
+    }
+    item += `
+	</div>
+</div>`;
+
+    console.log(item);
+    return item;
+}
+
 function popup(obj) {
     $(obj).css("display", "flex");
 }
@@ -45,6 +103,6 @@ function modalImage() {
 
 // (7) 구독자 정보 모달 닫기
 function modalClose() {
-    $(".modal-subscribe").css("display", "none");
+    $(".modal-follow").css("display", "none");
     location.reload();
 }

@@ -37,11 +37,16 @@
             <!--프로필 수정-->
             <form id="profileUpdate" action="/user/update" method="post">
                 <input type="hidden" name="id" id="id" th:value="${user.id}">
-                <input type="hidden" name="profileImgUrl" id="profileImgUrl" th:value="${user.profileImgUrl}">
                 <div class="content-item__02">
                     <div class="item__title">이메일</div>
                     <div class="item__input">
                         <input class="input_update" type="text" name="email" id="email" placeholder="이름" th:value="${user.email}" readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="content-item__02">
+                    <div class="item__title">프로필 사진</div>
+                    <div class="item__input">
+                        <input class="input_update" type="text" name="profileImgUrl" id="profileImgUrl" th:value="${user.profileImgUrl}" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="content-item__03">

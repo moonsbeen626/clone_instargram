@@ -13,7 +13,7 @@
             <img src="/img/dm.png" alt="DM">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-            <a th:href="@{/user/profile(id=${user.id})}" ><img class="pic" th:src="${user.profileImgUrl}" alt="마이페이지"></a>
+            <a th:href="@{/user/profile(id=${userDto.id})}" ><img class="pic" th:src="${userDto.profileImgUrl}" alt="마이페이지"></a>
         </div>
     </div>
 </nav>
@@ -68,10 +68,10 @@
     <!-- main-right -->
     <div class="main-right">
         <div class="myProfile">
-            <a th:href="@{/user/profile(id=${user.id})}" ><img class="pic" th:src="${user.profileImgUrl}" ></a>
+            <a th:href="@{/user/profile(id=${userDto.id})}" ><img class="pic" th:src="${userDto.profileImgUrl}" ></a>
             <div>
-                <span class="userID point-span" th:text="${user.name}"></span>
-                <span class="sub-span" th:text="${user.title}"></span>
+                <span class="userID point-span" th:text="${userDto.name}"></span>
+                <span class="sub-span" th:text="${userDto.title}"></span>
             </div>
         </div>
 <!--        &lt;!&ndash; story section &ndash;&gt;-->

@@ -1,4 +1,4 @@
-package moon.clone.instargram.web.dto;
+package moon.clone.instargram.web.dto.user;
 
 import lombok.*;
 import moon.clone.instargram.domain.user.User;
@@ -14,4 +14,6 @@ public class UserProfileDto {
     private boolean loginUser;
     private boolean follow;
     private User user;
+    private int userFollowerCount;
+    private int userFollowingCount;
 }
