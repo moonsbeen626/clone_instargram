@@ -13,7 +13,7 @@
             <img src="/img/dm.png" alt="DM">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-            <a th:href="@{/user/profile(id=${user.id})}" ><img class="pic" th:src="${user.profileImgUrl}"  alt="마이페이지"></a>
+            <a th:href="@{/user/profile(id=${userDto.id})}" ><img class="pic" th:src="${userDto.profileImgUrl}"  alt="마이페이지"></a>
         </div>
     </div>
 </nav>
@@ -26,7 +26,7 @@
             <!--프로필셋팅 아이디영역-->
             <div class="content-item__01">
                 <div class="item__img">
-                    <img th:src="${user.profileImgUrl}" />
+                    <img th:src="${userDto.profileImgUrl}" />
                 </div>
                 <div class="item__username">
                     <h2 sec:authentication="name" ></h2>
@@ -36,23 +36,23 @@
 
             <!--프로필 수정-->
             <form id="profileUpdate" action="/user/update" method="post">
-                <input type="hidden" name="id" id="id" th:value="${user.id}">
+                <input type="hidden" name="id" id="id" th:value="${userDto.id}">
                 <div class="content-item__02">
                     <div class="item__title">이메일</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="email" id="email" placeholder="이름" th:value="${user.email}" readonly="readonly"/>
+                        <input class="input_update" type="text" name="email" id="email" placeholder="이름" th:value="${userDto.email}" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="content-item__02">
                     <div class="item__title">프로필 사진</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="profileImgUrl" id="profileImgUrl" th:value="${user.profileImgUrl}" readonly="readonly"/>
+                        <input class="input_update" type="text" name="profileImgUrl" id="profileImgUrl" th:value="${userDto.profileImgUrl}" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="content-item__03">
                     <div class="item__title">이름</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="name" id="name" placeholder="유저네임" th:value="${user.name}" required="required" />
+                        <input class="input_update" type="text" name="name" id="name" placeholder="유저네임" th:value="${userDto.name}" required="required" />
                     </div>
                 </div>
                 <div class="content-item__04">
@@ -64,19 +64,19 @@
                 <div class="content-item__05">
                     <div class="item__title">웹사이트</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="website" id="website" placeholder="웹 사이트" th:value="${user.website}" />
+                        <input class="input_update" type="text" name="website" id="website" placeholder="웹 사이트" th:value="${userDto.website}" />
                     </div>
                 </div>
                 <div class="content-item__06">
                     <div class="item__title">소개</div>
                     <div class="item__input">
-                        <textarea class="input_update" name="title" id="title" rows="3" th:text="${user.title}"> </textarea>
+                        <textarea class="input_update" name="title" id="title" rows="3" th:text="${userDto.title}"> </textarea>
                     </div>
                 </div>
                 <div class="content-item__09">
                     <div class="item__title">전회번호</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="phone" id="phone" placeholder="전화번호" th:value="${user.phone}" />
+                        <input class="input_update" type="text" name="phone" id="phone" placeholder="전화번호" th:value="${userDto.phone}" />
                     </div>
                 </div>
 

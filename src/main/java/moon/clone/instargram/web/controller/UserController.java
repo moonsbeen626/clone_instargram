@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.service.UserService;
+import moon.clone.instargram.web.dto.user.UserDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,11 +34,11 @@ public class UserController {
         return "user/profile";
     }
 
-    //사용자 정보 수정 페이지로 이동 -> dto로 수정 필요
+    //사용자 정보 수정 페이지로 이동
     @GetMapping("/user/update")
     public String update(Authentication authentication, Model model) {
-        User user = userRepository.findUserByEmail(authentication.getName());
-        model.addAttribute("user", user);
+        UserDto userDto = userService.getUserDtoByEmail(authentication.getName());
+        model.addAttribute("userDto", userDto);
         return "user/update";
     }
 
@@ -49,10 +50,4 @@ public class UserController {
         return "redirect:/user/profile";
     }
 
-    //사용자 로그 아웃
-    @GetMapping(value = "/logout")
-    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-        return "redirect:/login";
-    }
 }

@@ -40,6 +40,23 @@ public class FollowService {
     }
 
     /**
+     * 팔로우 정보를 저장 후 저장된 정보 반환.
+     * @param email 로그인 사용자의 email
+     * @param toUserId 팔로우할 프로필의 id
+     * @return 만들어진 팔로우 정보를 Follow로 반환.
+     */
+    @Transactional
+    public Follow save(String email, Long toUserId) {
+        User fromUser = userRepository.findUserByEmail(email);
+        User toUser = userRepository.findUserById(toUserId);
+
+        return followRepository.save(Follow.builder()
+                .fromUser(fromUser)
+                .toUser(toUser)
+                .build());
+    }
+
+    /**
      * profileId 사용자의 팔로워에 대한 정보를 List로 반환.
      * @param profileId 현재 프로필 페이지의 id
      * @return 팔로워 정보 담은 FollowDto 리스트
@@ -76,7 +93,7 @@ public class FollowService {
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT u.id, u.name, u.profile_img_url, ");
-        sb.append("if ((SELECT 1 FROM follow WHERE to_user_id = ? AND to_user_id = u.id), TRUE, FALSE) AS followState, ");
+        sb.append("if ((SELECT 1 FROM follow WHERE from_user_id = ? AND to_user_id = u.id), TRUE, FALSE) AS followState, ");
         sb.append("if ((?=u.id), TRUE, FALSE) AS loginUser ");
         sb.append("FROM user u, follow f ");
         sb.append("WHERE u.id = f.to_user_id AND f.from_user_id = ?");

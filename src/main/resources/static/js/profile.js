@@ -103,6 +103,10 @@ function modalImage() {
 
 // (7) 구독자 정보 모달 닫기
 function modalClose() {
-    $(".modal-follow").css("display", "none");
+    $(".modal-follower").css("display", "none");
+    location.reload();
+}
+function modalClose() {
+    $(".modal-following").css("display", "none");
     location.reload();
 }

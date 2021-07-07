@@ -8,6 +8,7 @@ import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.service.FollowService;
 import moon.clone.instargram.service.UserService;
 import moon.clone.instargram.web.dto.follow.FollowDto;
+import moon.clone.instargram.web.dto.user.UserDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,6 @@ import java.util.List;
 public class FollowApiController {
 
     private final FollowRepository followRepository;
-    private final UserRepository userRepository;
     private final FollowService followService;
 
     /**
@@ -27,17 +27,9 @@ public class FollowApiController {
      * @param toUserId 팔로우 당하는 유저의 id
      * @return 새로 생성된 follow 객체
      */
-    @PostMapping("/follow/{toUserId}") // 수정필요 -> dto로
+    @PostMapping("/follow/{toUserId}")
     public Follow followUser(@PathVariable long toUserId, Authentication authentication) {
-        User fromUser = userRepository.findUserByEmail(authentication.getName());
-        User toUser = userRepository.findUserById(toUserId);
-
-        Follow follow = Follow.builder()
-                .fromUser(fromUser)
-                .toUser(toUser).build();
-        followRepository.save(follow);
-
-        return follow;
+        return followService.save(authentication.getName(), toUserId);
     }
 
     /**

@@ -117,6 +117,7 @@ public class UserService implements UserDetailsService {
                 .email(email)
                 .name(user.getName())
                 .title(user.getTitle())
+                .phone(user.getPhone())
                 .website(user.getWebsite())
                 .profileImgUrl(user.getProfileImgUrl())
                 .build();
