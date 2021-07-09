@@ -23,7 +23,7 @@ public class FollowService {
     private final EntityManager em;
 
     /**
-     * from_id, to_id에 해당하는 follow 객체 반환
+     * from_user_id의 User가 email을 가진 사용자이며 , to_user_id의 User가 toId에 해당하는 follow 객체 반환
      * @param email 팔로우 요청 email
      * @param toId 팔로우 당한 id
      * @return 해당 정보 가지고 있는 follow객체의 id값

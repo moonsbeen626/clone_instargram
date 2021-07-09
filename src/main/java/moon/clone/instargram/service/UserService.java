@@ -7,6 +7,7 @@ import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.web.dto.user.UserDto;
 import moon.clone.instargram.web.dto.user.UserLoginDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
+import moon.clone.instargram.web.dto.user.UserUpdateDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -60,14 +61,20 @@ public class UserService implements UserDetailsService {
 
     /**
      * 사용자 정보 업데이트
-     * @param user 업데이트 할 사용자 정보
+     * @param userUpdateDto 업데이트 할 사용자 정보
      */
     @Transactional
-    public void update(User user) {
+    public void update(UserUpdateDto userUpdateDto) {
+        User user = userRepository.findUserById(userUpdateDto.getId());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-
-        userRepository.save(user);
+        user.update(
+                encoder.encode(userUpdateDto.getPassword()),
+                userUpdateDto.getPhone(),
+                userUpdateDto.getName(),
+                userUpdateDto.getTitle(),
+                userUpdateDto.getWebsite(),
+                userUpdateDto.getProfileImgUrl()
+        );
     }
 
     /**
@@ -80,9 +87,17 @@ public class UserService implements UserDetailsService {
     public UserProfileDto getProfile(long currentId, String loginEmail) {
         UserProfileDto userProfileDto = new UserProfileDto();
 
-        // 현재 id에 해당하는 user정보
+        // 현재 id에 해당하는 user정보로 UserDto 생성.
         User user = userRepository.getById(currentId);
-        userProfileDto.setUser(user);
+        userProfileDto.setUserDto(UserDto.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .title(user.getTitle())
+                        .phone(user.getPhone())
+                        .website(user.getWebsite())
+                        .profileImgUrl(user.getProfileImgUrl())
+                        .build());
 
         // loginEmail 활용하여 currentId가 로그인된 사용자 인지 확인
         User loginUser = userRepository.findUserByEmail(loginEmail);

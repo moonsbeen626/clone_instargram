@@ -48,49 +48,57 @@ public class AccountControllerTest {
                 .apply(springSecurity())
                 .build();
     }
-
-    @Test
-    @Transactional
-    public void login_success() throws Exception {
-        //given
-        String username = "test@test";
-        String password = "12345";
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        User newUser = createUser(username, encoder.encode(password), "", "");
-        userRepository.save(newUser);
-
-        //when then
-        mockMvc.perform(formLogin("/loginForm").user(username).password(password))
-                .andDo(print())
-                .andExpect(redirectedUrl("/user/story"));
-    }
-
-    @Test
-    @Transactional
-    public void login_fail() throws Exception {
-        //given
-        String username = "test@test";
-        String password = "12345";
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        User newUser = createUser(username, encoder.encode(password), "", "");
-        userRepository.save(newUser);
-
-        //when then
-        mockMvc.perform(formLogin("/loginForm").user(username).password("12121"))
-                .andDo(print())
-                .andExpect(redirectedUrl("/login?error"));
-    }
-
-    private User createUser(String email, String password, String phone, String name) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setPhone(phone);
-        user.setName(name);
-        return user;
-    }
+//
+//    @Test
+//    @Transactional
+//    public void login_success() throws Exception {
+//        //given
+//        String username = "test@test";
+//        String password = "12345";
+//
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        User newUser = createUser(username, encoder.encode(password), "", "");
+//        userRepository.save(newUser);
+//
+//        //when then
+//        mockMvc.perform(formLogin("/loginForm").user(username).password(password))
+//                .andDo(print())
+//                .andExpect(redirectedUrl("/user/story"));
+//    }
+//
+//    @Test
+//    @Transactional
+//    public void login_fail() throws Exception {
+//        //given
+//        String username = "test@test";
+//        String password = "12345";
+//
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        User newUser = createUser(username, encoder.encode(password), "", "");
+//        userRepository.save(newUser);
+//
+//        //when then
+//        mockMvc.perform(formLogin("/loginForm").user(username).password("12121"))
+//                .andDo(print())
+//                .andExpect(redirectedUrl("/login?error"));
+//    }
+//
+//    @Test
+//    @Transactional
+//    public void logout_success() throws Exception {
+//        //when then
+//        mockMvc.perform(get("/logout"))
+//                .andExpect(redirectedUrl("/login"));
+//    }
+//
+//    private User createUser(String email, String password, String phone, String name) {
+//        User user = new User();
+//        user.setEmail(email);
+//        user.setPassword(password);
+//        user.setPhone(phone);
+//        user.setName(name);
+//        return user;
+//    }
 
     @Test
     @Transactional
@@ -137,14 +145,5 @@ public class AccountControllerTest {
         userLoginDto.setName(name);
         return userLoginDto;
     }
-
-    @Test
-    @Transactional
-    public void logout_success() throws Exception {
-        //when then
-        mockMvc.perform(get("/logout"))
-                .andExpect(redirectedUrl("/login"));
-    }
-
 }
 

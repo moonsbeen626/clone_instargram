@@ -5,7 +5,9 @@ import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.service.UserService;
 import moon.clone.instargram.web.dto.user.UserDto;
+import moon.clone.instargram.web.dto.user.UserLoginDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
+import moon.clone.instargram.web.dto.user.UserUpdateDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -50,11 +52,11 @@ public class UserController {
         return "user/update";
     }
 
-    //사용자 정보 업데이트 -> dto로 수정.
+    //사용자 정보 업데이트
     @PostMapping("/user/update")
-    public String updateUser(User user, RedirectAttributes redirectAttributes, Model model, Authentication authentication) {
-        userService.update(user);
-        redirectAttributes.addAttribute("id", user.getId());
+    public String updateUser(UserUpdateDto userUpdateDto, RedirectAttributes redirectAttributes) {
+        userService.update(userUpdateDto);
+        redirectAttributes.addAttribute("id", userUpdateDto.getId());
         return "redirect:/user/profile";
     }
 

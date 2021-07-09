@@ -13,7 +13,7 @@ public class UserProfileDto {
     private long loginId;
     private boolean loginUser;
     private boolean follow;
-    private User user;
+    private UserDto userDto;
     private int userFollowerCount;
     private int userFollowingCount;
 }

@@ -40,7 +40,7 @@
                 <div class="content-item__02">
                     <div class="item__title">이메일</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="email" id="email" placeholder="이름" th:value="${userDto.email}" readonly="readonly"/>
+                        <input class="input_update" type="text" name="email" id="email"  th:value="${userDto.email}" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="content-item__02">
@@ -93,6 +93,5 @@
     </section>
 </main>
 <footer th:replace="layout/common :: footer('footer')"></footer>
-<script src="/js/update.js"></script>
 </body>
 </html>
