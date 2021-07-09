@@ -9,7 +9,7 @@
         </div>
         <input id="searchInput" type="search" class="input-search" placeholder="검색">
         <div class="nav-2">
-            <a href="/story"><img src="/img/home.png" alt="홈"></a>
+            <a href="/user/story"><img src="/img/home.png" alt="홈"></a>
             <img src="/img/dm.png" alt="DM">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
@@ -24,26 +24,26 @@
         <article>
             <header>
                 <div class="profile-of-article">
-                    <a href="#"><img class="img-profile pic" src="img/sample.jpg"></a>
+                    <a href="#"><img class="img-profile pic" src="/img/sample.jpg"></a>
                     <span class="userID main-id point-span" > sample </span>
                 </div>
                 <img class="icon-react icon-more" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/more.png" alt="more">
             </header>
             <div class="main-image">
-                <img src="img/sample.jpg" alt="sample님의 피드 사진" class="mainPic">
+                <img src="/img/sample.jpg" alt="sample님의 피드 사진" class="mainPic">
             </div>
             <div class="icons-react">
                 <div class="icons-left">
                     <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
                     <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/comment.png" alt="말풍선">
-                    <img class="icon-react" src="img/dm.png" alt="DM">
+                    <img class="icon-react" src="/img/dm.png" alt="DM">
                 </div>
                 <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/bookmark.png" alt="북마크">
             </div>
             <!-- article text data -->
             <div class="reaction">
                 <div class="liked-people">
-                    <a href="#"><img class="pic" src="img/sample.jpg" alt="sample님의 프로필 사진"></a>
+                    <a href="#"><img class="pic" src="/img/sample.jpg" alt="sample님의 프로필 사진"></a>
                     <p><span class="point-span">sample</span>님 <span class="point-span">외 2,412,751명</span>이 좋아합니다</p>
                 </div>
                 <div class="description">
@@ -161,6 +161,6 @@
     </div>
     <footer th:replace="layout/common :: footer('footer')"></footer>
 </main>
-<script src="js/story.js"></script>
+<script src="/js/story.js"></script>
 </body>
 </html>

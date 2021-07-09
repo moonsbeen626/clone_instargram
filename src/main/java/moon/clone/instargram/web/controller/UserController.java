@@ -26,9 +26,17 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
+    //메인 sroty화면으로 이동
+    @GetMapping("user/story")
+    public String story(Authentication authentication, Model model) {
+        UserDto userDto = userService.getUserDtoByEmail(authentication.getName());
+        model.addAttribute("userDto", userDto);
+        return "user/story";
+    }
+
     //사용자 프로필 화면으로 이동
     @GetMapping("/user/profile")
-    public String profile(Model model, @RequestParam Long id, Authentication authentication) {
+    public String profile(Model model, @RequestParam long id, Authentication authentication) {
         UserProfileDto userProfileDto = userService.getProfile(id, authentication.getName());
         model.addAttribute("userProfileDto", userProfileDto);
         return "user/profile";
@@ -42,7 +50,7 @@ public class UserController {
         return "user/update";
     }
 
-    //사용자 정보 업데이트
+    //사용자 정보 업데이트 -> dto로 수정.
     @PostMapping("/user/update")
     public String updateUser(User user, RedirectAttributes redirectAttributes, Model model, Authentication authentication) {
         userService.update(user);

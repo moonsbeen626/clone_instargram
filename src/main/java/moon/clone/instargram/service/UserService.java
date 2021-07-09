@@ -1,13 +1,11 @@
 package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
-import moon.clone.instargram.config.auth.UserLogin;
-import moon.clone.instargram.domain.follow.Follow;
 import moon.clone.instargram.domain.follow.FollowRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
-import moon.clone.instargram.web.dto.follow.FollowDto;
 import moon.clone.instargram.web.dto.user.UserDto;
+import moon.clone.instargram.web.dto.user.UserLoginDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -26,35 +24,33 @@ public class UserService implements UserDetailsService {
 
     /**
      * Spring Security 필수 메소드
-     * @param username 입력받은 사용자 이메일 정보
-     * @return UserLogin 시큐리티 메타 정보를 포함한 user정보
+     * @param email 입력받은 사용자 이메일 정보
+     * @return eamil로 찾은 user정보
      * @throws UsernameNotFoundException
      */
     @Override
-    public UserLogin loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(username);
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findUserByEmail(email);
 
-        if(user != null) {
-            return new UserLogin(user);
-        } else throw new UsernameNotFoundException(username);
+        if(user == null) return null;
+        return user;
     }
 
     /**
-     * 회원정보 저장
-     * @param user 회원정보
-     * @return 저장되는 회원의 User 엔티티
+     * 회원정보 추가
+     * @param userLoginDto 회원 가입 폼으로 부터 전달받은 정보
+     * @return 이미 저장된 email여부에 따라 사용자 추가가 되었는지에 대한 boolean값.
      */
     @Transactional
-    public boolean save(User user) {
-        if(userRepository.findUserByEmail(user.getEmail()) != null) return false;
+    public boolean save(UserLoginDto userLoginDto) {
+        if(userRepository.findUserByEmail(userLoginDto.getEmail()) != null) return false;
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//패스워드 암호화
-        user.setPassword("{bcrypt}" + encoder.encode(user.getPassword()));
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         userRepository.save(User.builder()
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .phone(user.getPhone())
-                .name(user.getName())
+                .email(userLoginDto.getEmail())
+                .password(encoder.encode(userLoginDto.getPassword()))
+                .phone(userLoginDto.getPhone())
+                .name(userLoginDto.getName())
                 .title(null)
                 .website(null)
                 .profileImgUrl("/img/default_profile.jpg")
@@ -68,8 +64,8 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public void update(User user) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();//패스워드 암호화
-        user.setPassword("{bcrypt}" +encoder.encode(user.getPassword()));
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
 
         userRepository.save(user);
     }
@@ -122,5 +118,4 @@ public class UserService implements UserDetailsService {
                 .profileImgUrl(user.getProfileImgUrl())
                 .build();
     }
-
 }

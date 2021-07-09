@@ -3,6 +3,8 @@ package moon.clone.instargram.web.controller;
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.service.UserService;
+import moon.clone.instargram.web.dto.user.UserDto;
+import moon.clone.instargram.web.dto.user.UserLoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +19,8 @@ public class AccountController {
 
     //회원가입
     @PostMapping("/signup")
-    public String signup(User user, Model model) {
-        if(userService.save(user)) {
+    public String signup(UserLoginDto userLoginDto) {
+        if(userService.save(userLoginDto)) {
             return "redirect:/login";
         } else {
             return "redirect:/signup?error";
