@@ -81,7 +81,8 @@ public class UserService implements UserDetailsService {
 
         String imageFileName = user.getId() + "_" + multipartFile.getOriginalFilename();
         Path imageFilePath = Paths.get(uploadFolder + imageFileName);
-        if(multipartFile.getOriginalFilename() != "" && multipartFile.getOriginalFilename() != null) { //파일이 업로드 되었는지 확인
+
+        if(multipartFile.getSize() != 0) { //파일이 업로드 되었는지 확인
             try {
                 if (user.getProfileImgUrl() != null) { // 이미 프로필 사진이 있을경우
                     File file = new File(uploadFolder + user.getProfileImgUrl());
@@ -91,8 +92,8 @@ public class UserService implements UserDetailsService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            user.setProfileImgUrl(imageFileName);
         }
-        user.setProfileImgUrl(imageFileName);
 
         user.update(
                 encoder.encode(userUpdateDto.getPassword()),

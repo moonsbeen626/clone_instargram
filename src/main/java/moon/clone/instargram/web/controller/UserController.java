@@ -29,7 +29,6 @@ import java.io.File;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     //메인 sroty화면으로 이동
     @GetMapping("user/story")
@@ -57,7 +56,7 @@ public class UserController {
 
     //사용자 정보 업데이트
     @PostMapping("/user/update")
-    public String updateUser(UserUpdateDto userUpdateDto, @RequestParam("profileImgUrl") MultipartFile multipartFile, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+    public String updateUser(UserUpdateDto userUpdateDto, @RequestParam("profileImgUrl") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
         userService.update(userUpdateDto, multipartFile);
         redirectAttributes.addAttribute("id", userUpdateDto.getId());
         return "redirect:/user/profile";
