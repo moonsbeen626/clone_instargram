@@ -32,7 +32,7 @@ public class IndexController {
     }
 
     @GetMapping("/login") //로그인 화면으로 이동
-    public String login() {
+    public String login(HttpServletRequest httpServletRequest) {
         return "login";
     }
 

@@ -13,7 +13,7 @@
             <img src="/img/dm.png" alt="DM">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-            <a th:href="@{/user/profile(id=${userProfileDto.loginId})}" ><img class="pic" th:src="${userProfileDto.userDto.profileImgUrl}"  alt="마이페이지"></a>
+            <a th:href="@{/user/profile(id=${userProfileDto.loginId})}" ><img class="pic" th:src="@{${'/profile_imgs/' + userProfileDto.userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"></a>
         </div>
     </div>
 </nav>
@@ -28,7 +28,7 @@
                 <form id="userProfileImageForm">
                     <input type="file" name="profileImageFile" style="display: none;" id="userProfileImageInput" />
                 </form>
-                <img class="profile-image" th:src="${userProfileDto.userDto.profileImgUrl}" />
+                <img class="profile-image" th:src="@{${'/profile_imgs/' + userProfileDto.userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"/>
             </div>
         </div>
         <!--유저이미지end-->

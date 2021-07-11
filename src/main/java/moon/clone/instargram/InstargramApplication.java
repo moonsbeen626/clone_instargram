@@ -9,5 +9,4 @@ public class InstargramApplication {
     public static void main(String[] args) {
         SpringApplication.run(InstargramApplication.class, args);
     }
-
 }

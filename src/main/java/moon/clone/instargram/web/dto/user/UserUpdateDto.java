@@ -15,5 +15,4 @@ public class UserUpdateDto {
     private String name;
     private String title;
     private String website;
-    private String profileImgUrl;
 }

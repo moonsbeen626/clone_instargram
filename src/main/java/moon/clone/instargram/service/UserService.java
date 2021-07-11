@@ -8,13 +8,22 @@ import moon.clone.instargram.web.dto.user.UserDto;
 import moon.clone.instargram.web.dto.user.UserLoginDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import moon.clone.instargram.web.dto.user.UserUpdateDto;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RequiredArgsConstructor
 @Service
@@ -54,26 +63,43 @@ public class UserService implements UserDetailsService {
                 .name(userLoginDto.getName())
                 .title(null)
                 .website(null)
-                .profileImgUrl("/img/default_profile.jpg")
+                .profileImgUrl(null)
                 .build());
         return true;
     }
 
+    @Value("${profileImg.path}")
+    private String uploadFolder;
     /**
      * 사용자 정보 업데이트
      * @param userUpdateDto 업데이트 할 사용자 정보
      */
     @Transactional
-    public void update(UserUpdateDto userUpdateDto) {
+    public void update(UserUpdateDto userUpdateDto, MultipartFile multipartFile) {
         User user = userRepository.findUserById(userUpdateDto.getId());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        String imageFileName = user.getId() + "_" + multipartFile.getOriginalFilename();
+        Path imageFilePath = Paths.get(uploadFolder + imageFileName);
+        if(multipartFile.getOriginalFilename() != "" && multipartFile.getOriginalFilename() != null) { //파일이 업로드 되었는지 확인
+            try {
+                if (user.getProfileImgUrl() != null) { // 이미 프로필 사진이 있을경우
+                    File file = new File(uploadFolder + user.getProfileImgUrl());
+                    file.delete(); // 원래파일 삭제
+                }
+                Files.write(imageFilePath, multipartFile.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        user.setProfileImgUrl(imageFileName);
+
         user.update(
                 encoder.encode(userUpdateDto.getPassword()),
                 userUpdateDto.getPhone(),
                 userUpdateDto.getName(),
                 userUpdateDto.getTitle(),
-                userUpdateDto.getWebsite(),
-                userUpdateDto.getProfileImgUrl()
+                userUpdateDto.getWebsite()
         );
     }
 

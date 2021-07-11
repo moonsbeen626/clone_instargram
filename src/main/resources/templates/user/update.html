@@ -13,7 +13,7 @@
             <img src="/img/dm.png" alt="DM">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-            <a th:href="@{/user/profile(id=${userDto.id})}" ><img class="pic" th:src="${userDto.profileImgUrl}"  alt="마이페이지"></a>
+            <a th:href="@{/user/profile(id=${userDto.id})}" ><img class="pic" th:src="@{${'/profile_imgs/' + userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';" alt="마이페이지"></a>
         </div>
     </div>
 </nav>
@@ -26,7 +26,7 @@
             <!--프로필셋팅 아이디영역-->
             <div class="content-item__01">
                 <div class="item__img">
-                    <img th:src="${userDto.profileImgUrl}" />
+                    <img th:src="@{${'/profile_imgs/' + userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"/>
                 </div>
                 <div class="item__username">
                     <h2 sec:authentication="name" ></h2>
@@ -35,7 +35,7 @@
             <!--프로필셋팅 아이디영역end-->
 
             <!--프로필 수정-->
-            <form id="profileUpdate" action="/user/update" method="post">
+            <form id="profileUpdate" action="/user/update" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id" id="id" th:value="${userDto.id}">
                 <div class="content-item__02">
                     <div class="item__title">이메일</div>
@@ -46,7 +46,7 @@
                 <div class="content-item__02">
                     <div class="item__title">프로필 사진</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="profileImgUrl" id="profileImgUrl" th:value="${userDto.profileImgUrl}" readonly="readonly"/>
+                        <input class="input_update" type="file" name="profileImgUrl" id="profileImgUrl">
                     </div>
                 </div>
                 <div class="content-item__03">

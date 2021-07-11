@@ -8,6 +8,7 @@ import moon.clone.instargram.web.dto.user.UserDto;
 import moon.clone.instargram.web.dto.user.UserLoginDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import moon.clone.instargram.web.dto.user.UserUpdateDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -16,10 +17,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 @RequiredArgsConstructor
 @Controller
@@ -54,10 +57,9 @@ public class UserController {
 
     //사용자 정보 업데이트
     @PostMapping("/user/update")
-    public String updateUser(UserUpdateDto userUpdateDto, RedirectAttributes redirectAttributes) {
-        userService.update(userUpdateDto);
+    public String updateUser(UserUpdateDto userUpdateDto, @RequestParam("profileImgUrl") MultipartFile multipartFile, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+        userService.update(userUpdateDto, multipartFile);
         redirectAttributes.addAttribute("id", userUpdateDto.getId());
         return "redirect:/user/profile";
     }
-
 }
