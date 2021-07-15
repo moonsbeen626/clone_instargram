@@ -6,7 +6,6 @@ import java.math.BigInteger;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Data
 public class FollowDto {

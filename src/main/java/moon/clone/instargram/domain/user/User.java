@@ -1,18 +1,20 @@
 package moon.clone.instargram.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import moon.clone.instargram.domain.post.Post;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 public class User implements UserDetails {
@@ -28,6 +30,10 @@ public class User implements UserDetails {
     private String title;
     private String website;
     private String profileImgUrl;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"user"})
+    private List<Post> postList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -81,5 +87,9 @@ public class User implements UserDetails {
         this.name = name;
         this.title = title;
         this.website = website;
+    }
+
+    public void updateProfileImgUrl(String profileImgUrl) {
+        this.profileImgUrl = profileImgUrl;
     }
 }

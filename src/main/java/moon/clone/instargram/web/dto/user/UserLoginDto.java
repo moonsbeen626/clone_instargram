@@ -3,8 +3,6 @@ package moon.clone.instargram.web.dto.user;
 import lombok.*;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Data

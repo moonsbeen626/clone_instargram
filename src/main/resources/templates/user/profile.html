@@ -13,7 +13,7 @@
             <img src="/img/dm.png" alt="DM">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-            <a th:href="@{/user/profile(id=${userProfileDto.loginId})}" ><img class="pic" th:src="@{${'/profile_imgs/' + userProfileDto.userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"></a>
+            <a th:href="@{/user/profile(id=${userProfileDto.loginId})}" ><img class="pic" th:src="@{${'/profile_imgs/' + userProfileDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"></a>
         </div>
     </div>
 </nav>
@@ -28,18 +28,18 @@
                 <form id="userProfileImageForm">
                     <input type="file" name="profileImageFile" style="display: none;" id="userProfileImageInput" />
                 </form>
-                <img class="profile-image" th:src="@{${'/profile_imgs/' + userProfileDto.userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"/>
+                <img class="profile-image" th:src="@{${'/profile_imgs/' + userProfileDto.user.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"/>
             </div>
         </div>
         <!--유저이미지end-->
         <!--유저정보 및 사진등록 구독하기-->
         <div class="profile-right">
             <div class="name-group" >
-                <h2 th:text="${userProfileDto.userDto.name}" ></h2>
-                <button class="cta" th:if="${userProfileDto.loginUser}">사진등록</button>
+                <h2 th:text="${userProfileDto.user.name}" ></h2>
+                <button class="cta" th:if="${userProfileDto.loginUser}" onclick="location.href='/post/upload'">사진등록</button>
                 <span></span>
-                <button class="cta" th:if="!${userProfileDto.loginUser} and !${userProfileDto.follow}" th:onclick="|toggleSubscribe(${userProfileDto.userDto.id}, this)|">팔로우</button>
-                <button class="cta" th:if="!${userProfileDto.loginUser} and ${userProfileDto.follow}" th:onclick="|toggleSubscribe(${userProfileDto.userDto.id}, this)|">언팔로우</button>
+                <button class="cta" th:if="!${userProfileDto.loginUser} and !${userProfileDto.follow}" th:onclick="|toggleSubscribe(${userProfileDto.user.id}, this)|">팔로우</button>
+                <button class="cta" th:if="!${userProfileDto.loginUser} and ${userProfileDto.follow}" th:onclick="|toggleSubscribe(${userProfileDto.user.id}, this)|">언팔로우</button>
                 <button class="modi" th:if="${userProfileDto.loginUser}" onclick="popup('.modal-info')">
                     <i class="fas fa-cog"></i>
                 </button>
@@ -47,14 +47,14 @@
 
             <div class="subscribe">
                 <ul>
-                    <li>게시물<span>0</span></li>
-                    <li><a class="follow" th:onclick="|followerInfoModalOpen(${userProfileDto.userDto.id})|" style="text-decoration:none">팔로워 </a><span th:text="${userProfileDto.userFollowerCount}" ></span>
-                    <li><a class="follow" th:onclick="|followingInfoModalOpen(${userProfileDto.userDto.id})|" style="text-decoration:none">팔로잉 </a><span th:text="${userProfileDto.userFollowingCount}" ></span>
+                    <li>게시물<span th:text="${userProfileDto.postCount}" ></span></li>
+                    <li><a class="follow" th:onclick="|followerInfoModalOpen(${userProfileDto.user.id})|" style="text-decoration:none">팔로워 </a><span th:text="${userProfileDto.userFollowerCount}" ></span>
+                    <li><a class="follow" th:onclick="|followingInfoModalOpen(${userProfileDto.user.id})|" style="text-decoration:none">팔로잉 </a><span th:text="${userProfileDto.userFollowingCount}" ></span>
                 </ul>
             </div>
             <div class="state">
-                <h4 th:text="${userProfileDto.userDto.title}"></h4>
-                <h4 th:text="${userProfileDto.userDto.website}"></h4>
+                <h4 th:text="${userProfileDto.user.title}"></h4>
+                <h4 th:text="${userProfileDto.user.website}"></h4>
             </div>
         </div>
         <!--유저정보 및 사진등록 구독하기 end-->
@@ -69,26 +69,12 @@
             <!--게시물컨 그리드배열-->
             <div class="tab-1-content-inner">
                 <!--아이템들-->
-                <c:forEach var="image" items="${dto.userDto.images}"> <!-- EL표현식에서 변수명을 적으면 get함수가 자동 호출된다. -->
-                    <div class="img-box">
-                        <a href=""> <img src="/img/sample.jpg" />
-                        </a>
+                    <div class="img-box" th:each="post : ${userProfileDto.user.postList}" th:onclick="|postPopup(${post.id}, '.modal-post')|">
+                        <img th:src="@{${'/upload/' + post.postImgUrl}}" />
                         <div class="comment">
-                            <a href="#" class=""> <i class="fas fa-heart"></i><span>${image.likeCount}</span>
-                            </a>
+                            <a> <i class="fas fa-heart"></i><span>${image.likeCount}</span></a>
                         </div>
                     </div>
-                </c:forEach>
-                <c:forEach var="image" items="${dto.userDto.images}"> <!-- EL표현식에서 변수명을 적으면 get함수가 자동 호출된다. -->
-                    <div class="img-box">
-                        <a href=""> <img src="/img/sample.jpg" />
-                        </a>
-                        <div class="comment">
-                            <a href="#" class=""> <i class="fas fa-heart"></i><span>${image.likeCount}</span>
-                            </a>
-                        </div>
-                    </div>
-                </c:forEach>
                 <!--아이템들end-->
             </div>
         </div>
@@ -96,7 +82,7 @@
 </section>
 
 <!--로그아웃, 회원정보변경 모달-->
-<div class="modal-info" >
+<div class="modal-info">
     <div class="modal">
         <button onclick="location.href='/user/update'">회원정보 변경</button>
         <button onclick="location.href='/logout'">로그아웃</button>
@@ -104,6 +90,14 @@
     </div>
 </div>
 <!--로그아웃, 회원정보변경 모달 end-->
+
+<!--포스트 상세 정보 모달-->
+<div class="modal-post">
+    <div class="subscribe">
+        <div class="subscribe-list" id="postInfoModal"></div>
+    </div>
+</div>
+<!--포스트 상세 정보 모달 end-->
 
 <!--프로필사진 바꾸기 모달-->
 <div class="modal-image" >
@@ -114,6 +108,7 @@
     </div>
 </div>
 <!--프로필사진 바꾸기 모달end-->
+
 <div class="modal-follower">
     <div class="subscribe">
         <div class="subscribe-header">
@@ -122,11 +117,11 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="subscribe-list" id="followerModalList">
-        </div>
+        <div class="subscribe-list" id="followerModalList"></div>
     </div>
 </div>
-    <div class="modal-following">
+
+<div class="modal-following">
         <div class="subscribe">
             <div class="subscribe-header">
                 <span>팔로잉</span>
@@ -134,13 +129,11 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="subscribe-list" id="followingModalList">
-            </div>
+            <div class="subscribe-list" id="followingModalList"></div>
         </div>
-    </div>
+</div>
 <footer th:replace="layout/common :: footer('footer')"></footer>
 </main>
-<script src="/js/profile.js">
-</script>
+<script src="/js/profile.js"></script>
 </body>
 </html>

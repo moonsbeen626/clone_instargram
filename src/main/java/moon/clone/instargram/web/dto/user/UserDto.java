@@ -1,10 +1,11 @@
 package moon.clone.instargram.web.dto.user;
 
 import lombok.*;
+import moon.clone.instargram.domain.post.Post;
+
+import java.util.List;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Data
 public class UserDto {

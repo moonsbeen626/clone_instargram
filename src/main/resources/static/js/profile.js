@@ -27,13 +27,12 @@ function toggleSubscribe(toUserId, obj) {
 
 function followerInfoModalOpen(profileId) {
     $(".modal-follower").css("display", "flex");
+    console.log("ee");
 
     $.ajax({
         url: `/api/follow/${profileId}/follower`,
         dataType: "json"
     }).done(res => {
-        console.log(res.toString());
-
         res.forEach((follow) => {
             let item = getfollowModalItem(follow);
             $("#followerModalList").append(item);
@@ -49,8 +48,6 @@ function followingInfoModalOpen(profileId) {
         url: `/api/follow/${profileId}/following`,
         dataType: "json"
     }).done(res => {
-        console.log(res.toString());
-
         res.forEach((follow) => {
             let item = getfollowModalItem(follow);
             $("#followingModalList").append(item);
@@ -59,10 +56,11 @@ function followingInfoModalOpen(profileId) {
         console.log("구독정보 불러오기 오류", error);
     });
 }
+
 function getfollowModalItem(follow) {
     let item = `<div class="subscribe__item" id="subscribeModalItem-${follow.id}">
 	<div class="subscribe__img">
-		<img src="${follow.profileImgUrl}" />
+		<img src="/profile_imgs/${follow.profileImgUrl}" />
 	</div>
 	<div class="subscribe__text">
 		<h2>${follow.name}</h2>
@@ -78,8 +76,6 @@ function getfollowModalItem(follow) {
     item += `
 	</div>
 </div>`;
-
-    console.log(item);
     return item;
 }
 
@@ -109,4 +105,56 @@ function modalClose() {
 function modalClose() {
     $(".modal-following").css("display", "none");
     location.reload();
+}
+
+//포스트
+function postPopup(postId, obj) {
+    $(obj).css("display", "flex");
+
+    $.ajax({
+        url: "/api/post/" + postId,
+        dataType: "json"
+    }).done(res => {
+        let item = getPostModalInfo(res);
+        $("#postInfoModal").append(item);
+    }).fail(error => {
+        console.log("post 정보 불러오기 오류", error);
+    });
+}
+
+function getPostModalInfo(postInfoDto) {
+    let item = `
+    <div class="subscribe-header">
+            <span>스토리</span> `;
+            item += `<button class="exit" onclick="modalClose()"><i class="fas fa-times"></i></button>`
+            if(postInfoDto.uploader) {
+                item += `<button class="edit" onclick="location.href='/post/update/${postInfoDto.id}'"><i class="far fa-edit"></i></button>`
+            }
+    item += `
+    </div>
+    <div class="post-box">
+	    <div class="subscribe__img">
+		    <img src="/upload/${postInfoDto.postImgUrl}" />
+	    </div>
+	    <div class="post-info">
+	        <div class="text">
+	            <span>${postInfoDto.text}</span>
+            </div>
+	        <div class="tag">
+	            <span>${postInfoDto.tag}</span>
+            </div>
+        </div>
+        <div class="subscribe__img">
+            <span>${postInfoDto.createdate.toLocaleString()}</span>
+        </div>
+        <div class="comment-info"></div>
+	        <div class="comment">
+		        <div class="comment_input">
+                    <input id="input-comment-post" class="input-comment-post" type="text" placeholder="댓글 달기..." >
+                    <button type="submit" class="submit-comment" disabled>게시</button>
+                </div>
+	        </div>
+	    </div>
+    </div>`;
+    return item;
 }

@@ -2,6 +2,7 @@ package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.follow.FollowRepository;
+import moon.clone.instargram.domain.post.PostRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.web.dto.user.UserDto;
@@ -9,18 +10,14 @@ import moon.clone.instargram.web.dto.user.UserLoginDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import moon.clone.instargram.web.dto.user.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +28,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final PostRepository postRepository;
 
     /**
      * Spring Security 필수 메소드
@@ -92,7 +90,7 @@ public class UserService implements UserDetailsService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            user.setProfileImgUrl(imageFileName);
+            user.updateProfileImgUrl(imageFileName);
         }
 
         user.update(
@@ -114,22 +112,15 @@ public class UserService implements UserDetailsService {
     public UserProfileDto getProfile(long currentId, String loginEmail) {
         UserProfileDto userProfileDto = new UserProfileDto();
 
-        // 현재 id에 해당하는 user정보로 UserDto 생성.
         User user = userRepository.getById(currentId);
-        userProfileDto.setUserDto(UserDto.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .name(user.getName())
-                        .title(user.getTitle())
-                        .phone(user.getPhone())
-                        .website(user.getWebsite())
-                        .profileImgUrl(user.getProfileImgUrl())
-                        .build());
+        userProfileDto.setUser(user);
+        userProfileDto.setPostCount(postRepository.findPostsByUser(user).size());
 
         // loginEmail 활용하여 currentId가 로그인된 사용자 인지 확인
         User loginUser = userRepository.findUserByEmail(loginEmail);
         userProfileDto.setLoginUser(loginUser.getId() == user.getId());
         userProfileDto.setLoginId(loginUser.getId());
+        userProfileDto.setProfileImgUrl(loginUser.getProfileImgUrl());
 
         // currentId를 가진 user가 loginEmail을 가진 user를 구독 했는지 확인
         userProfileDto.setFollow(followRepository.findFollowByFromUserAndToUser(loginUser, user) != null);
@@ -159,5 +150,16 @@ public class UserService implements UserDetailsService {
                 .website(user.getWebsite())
                 .profileImgUrl(user.getProfileImgUrl())
                 .build();
+    }
+
+    /**
+     * user의 id 정보 반환
+     * @param email 로그인한 사용자의 email
+     * @return 로그인한 사용자의 id
+     */
+    @Transactional
+    public long getUserIdByEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+        return user.getId();
     }
 }

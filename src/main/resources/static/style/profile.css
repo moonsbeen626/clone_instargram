@@ -368,7 +368,7 @@
 }
 .modal-follower .subscribe .subscribe-list .subscribe__item {
     display: flex;
-    height: 70px;
+    height: 80px;
     padding: 10px;
     align-items: center;
 }
@@ -440,7 +440,7 @@
 }
 .modal-following .subscribe .subscribe-list .subscribe__item {
     display: flex;
-    height: 70px;
+    height: 80px;
     padding: 10px;
     align-items: center;
 }
@@ -469,6 +469,114 @@
     display: flex;
     align-items: center;
 }
+
+.modal-post {
+    position: fixed;
+    float: left;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.modal-post .subscribe {
+    width: 400px;
+    height: 700px;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.modal-post .subscribe .subscribe-header {
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+}
+.modal-post .subscribe .subscribe-header .exit {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background-color: transparent;
+    border: 0;
+}
+.modal-post .subscribe .subscribe-header .edit {
+    position: absolute;
+    top: 15px;
+    background-color: transparent;
+    border: 0;
+}
+.edit {
+    cursor: pointer;
+}
+.modal-post .subscribe .subscribe-header button i {
+    font-size: 20px;
+}
+.modal-post .subscribe .subscribe-list {
+    align-items: center;
+    overflow: hidden;
+}
+.modal-post .subscribe .subscribe-list .subscribe__item {
+    display: flex;
+    padding: 10px;
+}
+.post-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.post-box .subscribe__img {
+    width: 100%;
+    align-items: center;
+}
+.post-box img {
+    width: 100%;
+    object-fit: cover;
+}
+.comment {
+    width: 100%;
+    display: flex;
+}
+.comment-info {
+    overflow: hidden;
+    overflow-y: auto;
+}
+.input-comment-post {
+    font-size: 14px;
+    width: 350px;
+    height: 18px;
+    padding: 28px 16px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #262626;
+}
+.input-comment-post:focus {
+    outline: none;
+}
+.input-comment-post::placeholder {
+    color: #8e8e8e;
+}
+button.submit-comment {
+    color: #0095f6;
+    background-color: #fff;
+    border-style: none;
+    height: 100%;
+    width: 40px;
+    padding: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.submit-comment:disabled {
+    color: #B9DFFC;
+}
+button.submit-comment:focus {
+    outline: none;
+}
+
 
 .cta {
     margin-right: 10px;
