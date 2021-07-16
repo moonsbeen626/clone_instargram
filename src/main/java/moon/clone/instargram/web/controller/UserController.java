@@ -1,7 +1,9 @@
 package moon.clone.instargram.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import moon.clone.instargram.service.PostService;
 import moon.clone.instargram.service.UserService;
+import moon.clone.instargram.web.dto.post.PostInfoDto;
 import moon.clone.instargram.web.dto.user.UserDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import moon.clone.instargram.web.dto.user.UserUpdateDto;

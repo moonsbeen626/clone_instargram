@@ -49,7 +49,8 @@ public class FollowApiController {
      */
     @GetMapping("/follow/{profileId}/follower")
     public List<FollowDto> getFollower(@PathVariable long profileId, Authentication authentication) {
-        return followService.getFollowDtoListByProfileIdAboutFollower(profileId, authentication.getName());
+        List<FollowDto> list = followService.getFollowDtoListByProfileIdAboutFollower(profileId, authentication.getName());
+        return list;
     }
 
     /**

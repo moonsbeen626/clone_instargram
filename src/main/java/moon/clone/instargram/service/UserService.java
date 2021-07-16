@@ -28,7 +28,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
-    private final PostRepository postRepository;
 
     /**
      * Spring Security 필수 메소드
@@ -114,7 +113,7 @@ public class UserService implements UserDetailsService {
 
         User user = userRepository.getById(currentId);
         userProfileDto.setUser(user);
-        userProfileDto.setPostCount(postRepository.findPostsByUser(user).size());
+        userProfileDto.setPostCount(user.getPostList().size());
 
         // loginEmail 활용하여 currentId가 로그인된 사용자 인지 확인
         User loginUser = userRepository.findUserByEmail(loginEmail);
@@ -128,6 +127,10 @@ public class UserService implements UserDetailsService {
         //currentId를 가진 user의 팔로워, 팔로잉 수를 확인한다.
         userProfileDto.setUserFollowerCount(followRepository.findFollowerCountById(currentId));
         userProfileDto.setUserFollowingCount(followRepository.findFollowingCountById(currentId));
+
+        user.getPostList().forEach(post -> {
+            post.setLikesCount(post.getLikeList().size());
+        });
 
         return userProfileDto;
     }

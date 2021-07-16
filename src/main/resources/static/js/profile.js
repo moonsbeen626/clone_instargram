@@ -1,4 +1,3 @@
-
 function toggleSubscribe(toUserId, obj) {
     if ($(obj).text() === "언팔로우") {
         $.ajax({
@@ -27,7 +26,6 @@ function toggleSubscribe(toUserId, obj) {
 
 function followerInfoModalOpen(profileId) {
     $(".modal-follower").css("display", "flex");
-    console.log("ee");
 
     $.ajax({
         url: `/api/follow/${profileId}/follower`,
@@ -60,12 +58,13 @@ function followingInfoModalOpen(profileId) {
 function getfollowModalItem(follow) {
     let item = `<div class="subscribe__item" id="subscribeModalItem-${follow.id}">
 	<div class="subscribe__img">
-		<img src="/profile_imgs/${follow.profileImgUrl}" />
+		<img src="/profile_imgs/${follow.profileImgUrl}" onerror="this.src='/img/default_profile.jpg';" />
 	</div>
 	<div class="subscribe__text">
 		<h2>${follow.name}</h2>
 	</div>
 	<div class="subscribe__btn">`;
+    console.log(follow.followState);
     if(!follow.loginUser){
         if(follow.followState){
             item += `<button class="cta-follow blue" onclick="toggleSubscribe(${follow.id}, this)">언팔로우</button>`;
@@ -126,10 +125,10 @@ function getPostModalInfo(postInfoDto) {
     let item = `
     <div class="subscribe-header">
             <span>스토리</span> `;
-            item += `<button class="exit" onclick="modalClose()"><i class="fas fa-times"></i></button>`
-            if(postInfoDto.uploader) {
-                item += `<button class="edit" onclick="location.href='/post/update/${postInfoDto.id}'"><i class="far fa-edit"></i></button>`
-            }
+    item += `<button class="exit" onclick="modalClose()"><i class="fas fa-times"></i></button>`
+    if(postInfoDto.uploader) {
+        item += `<button class="edit" onclick="location.href='/post/update/${postInfoDto.id}'"><i class="far fa-edit"></i></button>`
+    }
     item += `
     </div>
     <div class="post-box">
@@ -137,6 +136,14 @@ function getPostModalInfo(postInfoDto) {
 		    <img src="/upload/${postInfoDto.postImgUrl}" />
 	    </div>
 	    <div class="post-info">
+	        <div class="text"> `;
+            if(postInfoDto.likeState) {
+                item += `<i class="fas fa-heart active" id="storyLikeIcon" onclick="toggleLike(${postInfoDto.id})">${postInfoDto.likesCount}</i>`;
+            } else {
+                item += `<i class="far fa-heart" id="storyLikeIcon" onclick="toggleLike(${postInfoDto.id})">${postInfoDto.likesCount}</i>`;
+            }
+            item += `
+            </div>
 	        <div class="text">
 	            <span>${postInfoDto.text}</span>
             </div>
@@ -157,4 +164,48 @@ function getPostModalInfo(postInfoDto) {
 	    </div>
     </div>`;
     return item;
+}
+function toggleLike(postId) {
+    let likeIcon = $("#storyLikeIcon");
+
+    if (likeIcon.hasClass("far")) { // 좋아요 하겠다
+
+        $.ajax({
+            type: "post",
+            url: `/api/post/${postId}/likes`,
+            dataType: "text"
+        }).done(res=>{
+
+            let likeCountStr = $("#storyLikeIcon").text();
+            let likeCount = Number(likeCountStr) + 1;
+            $("#storyLikeIcon").text(likeCount);
+
+            likeIcon.addClass("fas");
+            likeIcon.addClass("active");
+            likeIcon.removeClass("far");
+        }).fail(error=>{
+            console.log("오류", error);
+        });
+
+
+
+    } else { // 좋아요취소 하겠다
+
+        $.ajax({
+            type: "delete",
+            url: `/api/post/${postId}/unLikes`,
+            dataType: "text"
+        }).done(res=>{
+
+            let likeCountStr = $("#storyLikeIcon").text();
+            let likeCount = Number(likeCountStr) - 1;
+            $("#storyLikeIcon").text(likeCount);
+
+            likeIcon.removeClass("fas");
+            likeIcon.removeClass("active");
+            likeIcon.addClass("far");
+        }).fail(error=>{
+            console.log("오류", error);
+        });
+    }
 }

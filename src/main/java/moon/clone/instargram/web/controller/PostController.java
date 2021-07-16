@@ -48,6 +48,8 @@ public class PostController {
         return "post/update";
     }
 
+
+    //포스트 수정 폼
     @PostMapping("/post/update")
     public String postUpdate(PostUpdateDto postUpdateDto, Authentication authentication, RedirectAttributes redirectAttributes) {
         long id = userService.getUserIdByEmail(authentication.getName());
@@ -56,6 +58,7 @@ public class PostController {
         return "redirect:/user/profile";
     }
 
+    //포스트 삭제 폼
     @PostMapping("/post/delete")
     public String delete(@RequestParam("postId") long postId, Authentication authentication, RedirectAttributes redirectAttributes) {
         long id = userService.getUserIdByEmail(authentication.getName());

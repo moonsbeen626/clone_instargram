@@ -66,7 +66,7 @@ public class FollowService {
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT u.id, u.name, u.profile_img_url, ");
-        sb.append("if ((SELECT 1 FROM follow WHERE to_user_id = ? AND from_user_id = u.id), TRUE, FALSE) AS followState, ");
+        sb.append("if ((SELECT 1 FROM follow WHERE from_user_id = ? AND to_user_id = u.id), TRUE, FALSE) AS followState, ");
         sb.append("if ((?=u.id), TRUE, FALSE) AS loginUser ");
         sb.append("FROM user u, follow f ");
         sb.append("WHERE u.id = f.from_user_id AND f.to_user_id = ?");

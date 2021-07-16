@@ -1,6 +1,7 @@
 package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
+import moon.clone.instargram.domain.likes.LikesRepository;
 import moon.clone.instargram.domain.post.Post;
 import moon.clone.instargram.domain.post.PostRepository;
 import moon.clone.instargram.domain.user.User;
@@ -10,7 +11,6 @@ import moon.clone.instargram.web.dto.post.PostUpdateDto;
 import moon.clone.instargram.web.dto.post.PostInfoDto;
 import moon.clone.instargram.web.dto.post.PostUploadDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +27,7 @@ public class PostService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final LikesRepository likesRepository;
 
     @Value("${post.path}")
     private String uploadUrl;
@@ -55,6 +56,7 @@ public class PostService {
             .tag(postUploadDto.getTag())
             .text(postUploadDto.getText())
             .user(user)
+            .likesCount(0)
             .build());
     }
 
@@ -75,11 +77,16 @@ public class PostService {
         postInfoDto.setPostImgUrl(post.getPostImgUrl());
         postInfoDto.setCreatedate(post.getCreateDate());
 
-        User user = userRepository.findUserByEmail(loginEmail);
-        postInfoDto.setUploaderId(user.getId());
+        //포스트 정보 요청시 포스트 엔티티의 likesCount도 설정해준다.
+        post.setLikesCount(post.getLikeList().size());
+        postInfoDto.setLikesCount(post.getLikesCount());
 
+        User user = userRepository.findUserByEmail(loginEmail);
         if(user.getId() == post.getUser().getId()) postInfoDto.setUploader(true);
         else postInfoDto.setUploader(false);
+
+        if(likesRepository.findLikesByPostAndUser(post, user) != null) postInfoDto.setLikeState(true);
+        else postInfoDto.setLikeState(false);
 
         return postInfoDto;
     }

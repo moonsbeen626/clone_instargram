@@ -4,6 +4,7 @@ import lombok.*;
 
 @Builder
 @Getter
+@AllArgsConstructor
 @Setter
 @Data
 public class UserLoginDto {
