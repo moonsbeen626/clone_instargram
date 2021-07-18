@@ -2,21 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/common :: head('Instargram')"></head>
 <body>
-<nav th:fragment="menu(menu)">
-    <div class="nav-container">
-        <div class="nav-1">
-            <img class="logo_instagram" src="/img/logo_text.png" alt="logo_text">
-        </div>
-        <input id="searchInput" type="search" class="input-search" placeholder="검색">
-        <div class="nav-2">
-            <a href="/user/story"><img src="/img/home.png" alt="홈"></a>
-            <img src="/img/dm.png" alt="DM">
-            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
-            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
-            <a th:href="@{/user/profile(id=${userDto.id})}" ><img class="pic" th:src="@{${'/profile_imgs/' + userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';" alt="마이페이지"></a>
-        </div>
-    </div>
-</nav>
+<head th:replace="layout/common :: menu('menu')"></head>
 <!--프로필셋팅 메인-->
 <main class="main">
     <!--프로필셋팅 섹션-->
@@ -26,7 +12,7 @@
             <!--프로필셋팅 아이디영역-->
             <div class="content-item__01">
                 <div class="item__img">
-                    <img th:src="@{${'/profile_imgs/' + userDto.profileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"/>
+                    <img th:src="@{${'/profile_imgs/' + #authentication.getPrincipal().getUser().getProfileImgUrl()}}" onerror="this.src='/img/default_profile.jpg';"/>
                 </div>
                 <div class="item__username">
                     <h2 sec:authentication="name" ></h2>
@@ -36,11 +22,11 @@
 
             <!--프로필 수정-->
             <form id="profileUpdate" action="/user/update" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="id" id="id" th:value="${userDto.id}">
+                <input type="hidden" name="id" id="id" th:value="${#authentication.getPrincipal().getUser().getId()}">
                 <div class="content-item__02">
                     <div class="item__title">이메일</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="email" id="email"  th:value="${userDto.email}" readonly="readonly"/>
+                        <input class="input_update" type="text" name="email" id="email"  th:value="${#authentication.getPrincipal().getUser().getEmail()}" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="content-item__02">
@@ -52,7 +38,7 @@
                 <div class="content-item__03">
                     <div class="item__title">이름</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="name" id="name" placeholder="유저네임" th:value="${userDto.name}" required="required" />
+                        <input class="input_update" type="text" name="name" id="name" placeholder="유저네임" th:value="${#authentication.getPrincipal().getUser().getName()}" required="required" />
                     </div>
                 </div>
                 <div class="content-item__04">
@@ -64,19 +50,19 @@
                 <div class="content-item__05">
                     <div class="item__title">웹사이트</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="website" id="website" placeholder="웹 사이트" th:value="${userDto.website}" />
+                        <input class="input_update" type="text" name="website" id="website" placeholder="웹 사이트" th:value="${#authentication.getPrincipal().getUser().getWebsite()}" />
                     </div>
                 </div>
                 <div class="content-item__06">
                     <div class="item__title">소개</div>
                     <div class="item__input">
-                        <textarea class="input_update" name="title" id="title" rows="3" th:text="${userDto.title}"> </textarea>
+                        <textarea class="input_update" name="title" id="title" rows="3" th:text="${#authentication.getPrincipal().getUser().getTitle()}"> </textarea>
                     </div>
                 </div>
                 <div class="content-item__09">
                     <div class="item__title">전회번호</div>
                     <div class="item__input">
-                        <input class="input_update" type="text" name="phone" id="phone" placeholder="전화번호" th:value="${userDto.phone}" />
+                        <input class="input_update" type="text" name="phone" id="phone" placeholder="전화번호" th:value="${#authentication.getPrincipal().getUser().getPhone()}" />
                     </div>
                 </div>
 

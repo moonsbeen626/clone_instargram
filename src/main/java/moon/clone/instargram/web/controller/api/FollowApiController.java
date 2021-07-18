@@ -1,15 +1,11 @@
 package moon.clone.instargram.web.controller.api;
 
 import lombok.RequiredArgsConstructor;
-import moon.clone.instargram.domain.follow.Follow;
+import moon.clone.instargram.config.auth.PrincipalDetails;
 import moon.clone.instargram.domain.follow.FollowRepository;
-import moon.clone.instargram.domain.user.User;
-import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.service.FollowService;
-import moon.clone.instargram.service.UserService;
 import moon.clone.instargram.web.dto.follow.FollowDto;
-import moon.clone.instargram.web.dto.user.UserDto;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,47 +15,26 @@ import java.util.List;
 @RequestMapping("/api")
 public class FollowApiController {
 
-    private final FollowRepository followRepository;
     private final FollowService followService;
 
-    /**
-     * follow fromUserId를 가진 user가 toUserId를 가진 user를 팔로우 하는 정보를 추가한다.
-     * @param toUserId 팔로우 당하는 유저의 id
-     * @return 새로 생성된 follow 객체
-     */
     @PostMapping("/follow/{toUserId}")
-    public Follow followUser(@PathVariable long toUserId, Authentication authentication) {
-        return followService.save(authentication.getName(), toUserId);
+    public void followUser(@PathVariable long toUserId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        followService.follow(principalDetails.getUser().getId(), toUserId);
     }
 
-    /**
-     * follow fromUserId를 가진 user가 toUserId를 가진 user를 팔로우 하는 정보를 삭제한다.
-     * @param toUserId 언팔로우 당하는 유저의 id
-     */
     @DeleteMapping("/follow/{toUserId}")
-    public void unFollowUser(@PathVariable long toUserId, Authentication authentication) {
-        Long id = followService.getFollowIdByFromEmailToId(authentication.getName(), toUserId);
-        followRepository.deleteById(id);
+    public void unFollowUser(@PathVariable long toUserId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        followService.unFollow(principalDetails.getUser().getId(), toUserId);
     }
 
-    /**
-     * 팔로워 정보를 리스트로 반환.
-     * @param profileId 현재 프로필페이지의 주인 id
-     * @return profileId를 toUser로 가지는 팔로워의 정보
-     */
     @GetMapping("/follow/{profileId}/follower")
-    public List<FollowDto> getFollower(@PathVariable long profileId, Authentication authentication) {
-        List<FollowDto> list = followService.getFollowDtoListByProfileIdAboutFollower(profileId, authentication.getName());
+    public List<FollowDto> getFollower(@PathVariable long profileId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        List<FollowDto> list = followService.getFollower(profileId, principalDetails.getUser().getId());
         return list;
     }
 
-    /**
-     * 팔로잉 정보를 리스트로 반환.
-     * @param profileId 현재 프로필페이지의 주인 id
-     * @return profileId를 toUser로 가지는 팔로잉 정보
-     */
     @GetMapping("/follow/{profileId}/following")
-    public List<FollowDto> getFollowing(@PathVariable long profileId, Authentication authentication) {
-        return followService.getFollowDtoListByProfileIdAboutFollowing(profileId, authentication.getName());
+    public List<FollowDto> getFollowing(@PathVariable long profileId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return followService.getFollowing(profileId, principalDetails.getUser().getId());
     }
 }

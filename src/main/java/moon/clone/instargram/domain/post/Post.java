@@ -32,6 +32,7 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Likes> likeList;
 
+    @Transient //이거 없으면 포스트 삭제시 likes랑 constraint 제약조건에 위배되어 삭제 못함.
     private long likesCount;
 
     private LocalDateTime createDate;

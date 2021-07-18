@@ -1,6 +1,7 @@
 package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
+import moon.clone.instargram.config.auth.PrincipalDetails;
 import moon.clone.instargram.domain.likes.LikesRepository;
 import moon.clone.instargram.domain.post.Post;
 import moon.clone.instargram.domain.post.PostRepository;
@@ -31,15 +32,8 @@ public class PostService {
 
     @Value("${post.path}")
     private String uploadUrl;
-
-    /**
-     * 새로운 post를 저장한다.
-     * @param postUploadDto post 업로드시 필요한 정보가 담겨있는 dto
-     * @param userId post 업로드를 요청한 사용자의 id
-     * @param multipartFile post 이미지
-     */
     @Transactional
-    public void save(PostUploadDto postUploadDto, long userId, MultipartFile multipartFile) {
+    public void save(PostUploadDto postUploadDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
         UUID uuid = UUID.randomUUID();
         String imgFileName = uuid + "_" + multipartFile.getOriginalFilename();
 
@@ -50,24 +44,17 @@ public class PostService {
             e.printStackTrace();
         }
 
-        User user = userRepository.findUserById(userId);
         postRepository.save(Post.builder()
             .postImgUrl(imgFileName)
             .tag(postUploadDto.getTag())
             .text(postUploadDto.getText())
-            .user(user)
+            .user(principalDetails.getUser())
             .likesCount(0)
             .build());
     }
 
-    /**
-     * postinfodto를 반환한다.
-     * @param postId 현재 포스트의 id
-     * @param loginEmail 현재 로그인한 사용자의 email
-     * @return 현재 포스트의 정보와 로그인한 사용자와의 관계를 담은 dto 반환
-     */
     @Transactional
-    public PostInfoDto getPostInfoDto(long postId, String loginEmail) {
+    public PostInfoDto getPostInfoDto(long postId, long sessionId) {
         PostInfoDto postInfoDto = new PostInfoDto();
         postInfoDto.setId(postId);
 
@@ -81,7 +68,7 @@ public class PostService {
         post.setLikesCount(post.getLikeList().size());
         postInfoDto.setLikesCount(post.getLikesCount());
 
-        User user = userRepository.findUserByEmail(loginEmail);
+        User user = userRepository.findUserById(sessionId);
         if(user.getId() == post.getUser().getId()) postInfoDto.setUploader(true);
         else postInfoDto.setUploader(false);
 
@@ -91,11 +78,6 @@ public class PostService {
         return postInfoDto;
     }
 
-    /**
-     * 포스트 정보를 담은 dto를 반환한다.
-     * @param postId 수정할 포스트의 id
-     * @return
-     */
     @Transactional
     public PostDto getPostDto(long postId) {
         //예외 처리 필요 -> post의 작성자가 아닌 사람이 해당 페이지에 접근하여 수정하려고 한다면??
@@ -111,10 +93,6 @@ public class PostService {
         return postDto;
     }
 
-    /**
-     * 포스트 수정
-     * @param postUpdateDto 수정된 정보를 가지고 있는 postupdatedto
-     */
     @Transactional
     public void update(PostUpdateDto postUpdateDto) {
         Post post = postRepository.findPostById(postUpdateDto.getId());
@@ -123,14 +101,14 @@ public class PostService {
 
     @Value("${post.path}")
     private String uploadFolder;
-    /**
-     * 포스트 삭제
-     * @param postId 삭제할 post의 id
-     */
     @Transactional
     public void delete(long postId) {
         Post post = postRepository.findPostById(postId);
 
+        //관련된 likes의 정보 먼저 삭제해 준다.
+        likesRepository.deleteLikesByPost(post);
+
+        //관련 파일 저장 위치에서 삭제해 준다.
         File file = new File(uploadFolder + post.getPostImgUrl());
         file.delete();
 

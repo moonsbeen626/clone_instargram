@@ -1,17 +1,14 @@
 package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
+import moon.clone.instargram.config.auth.PrincipalDetails;
 import moon.clone.instargram.domain.follow.FollowRepository;
-import moon.clone.instargram.domain.post.PostRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
-import moon.clone.instargram.web.dto.user.UserDto;
-import moon.clone.instargram.web.dto.user.UserLoginDto;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
+import moon.clone.instargram.web.dto.user.UserSignupDto;
 import moon.clone.instargram.web.dto.user.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,40 +21,21 @@ import java.nio.file.Paths;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
 
-    /**
-     * Spring Security 필수 메소드
-     * @param email 입력받은 사용자 이메일 정보
-     * @return eamil로 찾은 user정보
-     * @throws UsernameNotFoundException
-     */
-    @Override
-    public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(email);
-
-        if(user == null) return null;
-        return user;
-    }
-
-    /**
-     * 회원정보 추가
-     * @param userLoginDto 회원 가입 폼으로 부터 전달받은 정보
-     * @return 이미 저장된 email여부에 따라 사용자 추가가 되었는지에 대한 boolean값.
-     */
     @Transactional
-    public boolean save(UserLoginDto userLoginDto) {
-        if(userRepository.findUserByEmail(userLoginDto.getEmail()) != null) return false;
+    public boolean save(UserSignupDto userSignupDto) {
+        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) return false;
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         userRepository.save(User.builder()
-                .email(userLoginDto.getEmail())
-                .password(encoder.encode(userLoginDto.getPassword()))
-                .phone(userLoginDto.getPhone())
-                .name(userLoginDto.getName())
+                .email(userSignupDto.getEmail())
+                .password(encoder.encode(userSignupDto.getPassword()))
+                .phone(userSignupDto.getPhone())
+                .name(userSignupDto.getName())
                 .title(null)
                 .website(null)
                 .profileImgUrl(null)
@@ -67,12 +45,9 @@ public class UserService implements UserDetailsService {
 
     @Value("${profileImg.path}")
     private String uploadFolder;
-    /**
-     * 사용자 정보 업데이트
-     * @param userUpdateDto 업데이트 할 사용자 정보
-     */
+
     @Transactional
-    public void update(UserUpdateDto userUpdateDto, MultipartFile multipartFile) {
+    public void update(UserUpdateDto userUpdateDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
         User user = userRepository.findUserById(userUpdateDto.getId());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -99,70 +74,35 @@ public class UserService implements UserDetailsService {
                 userUpdateDto.getTitle(),
                 userUpdateDto.getWebsite()
         );
+
+        //세션 정보 변경
+        principalDetails.setUser(user);
     }
 
-    /**
-     * UserProfileDto 정보 반환
-     * @param currentId 현재 접속한 profile 페이지의 사용자
-     * @param loginEmail 로그인한 사용자의 email
-     * @return currentId에 해당하는 user profile정보 반환
-     */
     @Transactional
-    public UserProfileDto getProfile(long currentId, String loginEmail) {
+    public UserProfileDto getUserProfileDto(long profileId, long sessionId) {
         UserProfileDto userProfileDto = new UserProfileDto();
 
-        User user = userRepository.getById(currentId);
+        User user = userRepository.getById(profileId);
         userProfileDto.setUser(user);
         userProfileDto.setPostCount(user.getPostList().size());
 
         // loginEmail 활용하여 currentId가 로그인된 사용자 인지 확인
-        User loginUser = userRepository.findUserByEmail(loginEmail);
+        User loginUser = userRepository.findUserById(sessionId);
         userProfileDto.setLoginUser(loginUser.getId() == user.getId());
-        userProfileDto.setLoginId(loginUser.getId());
-        userProfileDto.setProfileImgUrl(loginUser.getProfileImgUrl());
 
         // currentId를 가진 user가 loginEmail을 가진 user를 구독 했는지 확인
         userProfileDto.setFollow(followRepository.findFollowByFromUserAndToUser(loginUser, user) != null);
 
         //currentId를 가진 user의 팔로워, 팔로잉 수를 확인한다.
-        userProfileDto.setUserFollowerCount(followRepository.findFollowerCountById(currentId));
-        userProfileDto.setUserFollowingCount(followRepository.findFollowingCountById(currentId));
+        userProfileDto.setUserFollowerCount(followRepository.findFollowerCountById(profileId));
+        userProfileDto.setUserFollowingCount(followRepository.findFollowingCountById(profileId));
 
+        //좋아요 수 확인
         user.getPostList().forEach(post -> {
             post.setLikesCount(post.getLikeList().size());
         });
 
         return userProfileDto;
-    }
-
-    /**
-     * UserDto 정보 반환
-     * @param email 사용자의 email 정보
-     * @return 로그인한 사용자의 UserDto
-     */
-    @Transactional
-    public UserDto getUserDtoByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
-
-        return UserDto.builder()
-                .id(user.getId())
-                .email(email)
-                .name(user.getName())
-                .title(user.getTitle())
-                .phone(user.getPhone())
-                .website(user.getWebsite())
-                .profileImgUrl(user.getProfileImgUrl())
-                .build();
-    }
-
-    /**
-     * user의 id 정보 반환
-     * @param email 로그인한 사용자의 email
-     * @return 로그인한 사용자의 id
-     */
-    @Transactional
-    public long getUserIdByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
-        return user.getId();
     }
 }

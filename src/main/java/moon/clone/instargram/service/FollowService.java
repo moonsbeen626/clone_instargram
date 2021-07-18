@@ -1,10 +1,7 @@
 package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
-import moon.clone.instargram.domain.follow.Follow;
 import moon.clone.instargram.domain.follow.FollowRepository;
-import moon.clone.instargram.domain.user.User;
-import moon.clone.instargram.domain.user.UserRepository;
 import moon.clone.instargram.web.dto.follow.FollowDto;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Service;
@@ -19,51 +16,19 @@ import java.util.List;
 public class FollowService {
 
     private final FollowRepository followRepository;
-    private final UserRepository userRepository;
     private final EntityManager em;
 
-    /**
-     * from_user_id의 User가 email을 가진 사용자이며 , to_user_id의 User가 toId에 해당하는 follow 객체 반환
-     * @param email 팔로우 요청 email
-     * @param toId 팔로우 당한 id
-     * @return 해당 정보 가지고 있는 follow객체의 id값
-     */
     @Transactional
-    public long getFollowIdByFromEmailToId(String email, Long toId) {
-        User fromUser = userRepository.findUserByEmail(email);
-        User toUser = userRepository.findUserById(toId);
-
-        Follow follow = followRepository.findFollowByFromUserAndToUser(fromUser, toUser);
-
-        if(follow != null) return follow.getId();
-        else return -1;
+    public void follow(long fromUserId, long toUserId) {
+        followRepository.follow(fromUserId, toUserId);
     }
 
-    /**
-     * 팔로우 정보를 저장 후 저장된 정보 반환.
-     * @param email 로그인 사용자의 email
-     * @param toUserId 팔로우할 프로필의 id
-     * @return 만들어진 팔로우 정보를 Follow로 반환.
-     */
     @Transactional
-    public Follow save(String email, Long toUserId) {
-        User fromUser = userRepository.findUserByEmail(email);
-        User toUser = userRepository.findUserById(toUserId);
-
-        return followRepository.save(Follow.builder()
-                .fromUser(fromUser)
-                .toUser(toUser)
-                .build());
+    public void unFollow(long fromUserId, long toUserId) {
+        followRepository.unFollow(fromUserId, toUserId);
     }
 
-    /**
-     * profileId 사용자의 팔로워에 대한 정보를 List로 반환.
-     * @param profileId 현재 프로필 페이지의 id
-     * @return 팔로워 정보 담은 FollowDto 리스트
-     */
-    public List<FollowDto> getFollowDtoListByProfileIdAboutFollower(long profileId, String loginEmail) {
-        long loginId = userRepository.findUserByEmail(loginEmail).getId();
-
+    public List<FollowDto> getFollower(long profileId, long loginId) {
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT u.id, u.name, u.profile_img_url, ");
         sb.append("if ((SELECT 1 FROM follow WHERE from_user_id = ? AND to_user_id = u.id), TRUE, FALSE) AS followState, ");
@@ -83,14 +48,7 @@ public class FollowService {
         return followDtoList;
     }
 
-    /**
-     * profileId 사용자의 팔로잉에 대한 정보를 List로 반환.
-     * @param profileId 현재 프로필 페이지의 id
-     * @return 팔로잉 정보 담은 FollowDto 리스트
-     */
-    public List<FollowDto> getFollowDtoListByProfileIdAboutFollowing(long profileId, String loginEmail) {
-        long loginId = userRepository.findUserByEmail(loginEmail).getId();
-
+    public List<FollowDto> getFollowing(long profileId, long loginId) {
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT u.id, u.name, u.profile_img_url, ");
         sb.append("if ((SELECT 1 FROM follow WHERE from_user_id = ? AND to_user_id = u.id), TRUE, FALSE) AS followState, ");

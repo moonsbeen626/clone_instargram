@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <head th:fragment="head(title)">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Instagram</title>
@@ -25,6 +25,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
+<nav th:fragment="menu(menu)">
+    <div class="nav-container">
+        <div class="nav-1">
+            <img class="logo_instagram" src="/img/logo_text.png" alt="logo_text">
+        </div>
+        <input id="searchInput" type="search" class="input-search" placeholder="검색">
+        <div class="nav-2">
+            <a href="/user/story"><img src="/img/home.png" alt="홈"></a>
+            <img src="/img/dm.png" alt="DM">
+            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
+            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
+            <a th:href="@{/user/profile(id=${#authentication.getPrincipal().getUser().getId()})}" ><img class="pic" th:src="@{${'/profile_imgs/' + #authentication.getPrincipal().getUser().getProfileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"></a>
+        </div>
+    </div>
+</nav>
 
 <footer th:fragment="footer(footer)">
     <p class="insta-sccript">

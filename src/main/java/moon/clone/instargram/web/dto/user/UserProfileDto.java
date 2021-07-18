@@ -10,8 +10,6 @@ import moon.clone.instargram.domain.user.User;
 @Getter
 @Data
 public class UserProfileDto {
-    private long loginId;
-    private String profileImgUrl;
     private boolean loginUser;
     private boolean follow;
     private User user;
