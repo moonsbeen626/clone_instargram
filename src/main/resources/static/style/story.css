@@ -1,4 +1,3 @@
-/* general */
 ul,li {
     margin: 0;
     padding: 0;
@@ -133,6 +132,7 @@ article, .section-story, .section-recommend {
     background-color: #fff;
     border-radius: 3px;
     border: 1px solid #DBDBDB;
+    margin-top: 50px;
 }
 /*article {*/
 /*    margin-bottom: 60px;*/

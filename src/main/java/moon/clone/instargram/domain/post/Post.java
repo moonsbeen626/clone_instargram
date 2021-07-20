@@ -25,15 +25,19 @@ public class Post {
     private String text;
 
     @JsonIgnoreProperties({"postList"})
+    @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @JsonIgnoreProperties({"post"})
     @OneToMany(mappedBy = "post")
-    private List<Likes> likeList;
+    private List<Likes> likesList;
 
-    @Transient //이거 없으면 포스트 삭제시 likes랑 constraint 제약조건에 위배되어 삭제 못함.
+    @Transient
     private long likesCount;
+
+    @Transient
+    private boolean likesState;
 
     private LocalDateTime createDate;
 
@@ -56,7 +60,11 @@ public class Post {
         this.text = text;
     }
 
-    public void setLikesCount(long likesCount) {
+    public void updateLikesCount(long likesCount) {
         this.likesCount = likesCount;
+    }
+
+    public void updateLikesState(boolean likesState) {
+        this.likesState = likesState;
     }
 }

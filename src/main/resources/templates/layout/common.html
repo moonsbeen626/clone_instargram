@@ -26,14 +26,14 @@
 </head>
 
 <nav th:fragment="menu(menu)">
+    <input type="hidden" id="principalId" value="${#authentication.getPrincipal().getUser().getId()})}" />
     <div class="nav-container">
         <div class="nav-1">
             <img class="logo_instagram" src="/img/logo_text.png" alt="logo_text">
         </div>
         <input id="searchInput" type="search" class="input-search" placeholder="검색">
         <div class="nav-2">
-            <a href="/user/story"><img src="/img/home.png" alt="홈"></a>
-            <img src="/img/dm.png" alt="DM">
+            <a href="/post/story"><img src="/img/home.png" alt="홈"></a>
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
             <a th:href="@{/user/profile(id=${#authentication.getPrincipal().getUser().getId()})}" ><img class="pic" th:src="@{${'/profile_imgs/' + #authentication.getPrincipal().getUser().getProfileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"></a>

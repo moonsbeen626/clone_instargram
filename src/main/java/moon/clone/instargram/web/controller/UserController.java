@@ -20,12 +20,6 @@ public class UserController {
 
     private final UserService userService;
 
-    //메인 sroty화면으로 이동
-    @GetMapping({"/", "user/story"})
-    public String story() {
-        return "user/story";
-    }
-
     //사용자 프로필 화면으로 이동
     @GetMapping("/user/profile")
     public String profile(Model model, @RequestParam long id, @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -42,7 +36,8 @@ public class UserController {
 
     //사용자 정보 업데이트
     @PostMapping("/user/update")
-    public String updateUser(UserUpdateDto userUpdateDto, @RequestParam("profileImgUrl") MultipartFile multipartFile, RedirectAttributes redirectAttributes, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String updateUser(UserUpdateDto userUpdateDto, @RequestParam("profileImgUrl") MultipartFile multipartFile,
+                             RedirectAttributes redirectAttributes, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.update(userUpdateDto, multipartFile, principalDetails);
         redirectAttributes.addAttribute("id", userUpdateDto.getId());
         return "redirect:/user/profile";

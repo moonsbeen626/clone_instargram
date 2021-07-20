@@ -1,12 +1,15 @@
 package moon.clone.instargram.domain.post;
 
-import moon.clone.instargram.domain.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findPostsByUser(User user);
     Post findPostById(long id);
     void deletePostById(long id);
+
+    @Query(value = "SELECT * FROM post WHERE user_id IN (SELECT to_user_id FROM FOLLOW WHERE from_user_id = :sessionId) ORDER BY id DESC", nativeQuery = true)
+    Page<Post> mainStory(long sessionId, Pageable pageable);
 }

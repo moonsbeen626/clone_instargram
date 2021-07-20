@@ -76,7 +76,7 @@ public class UserService {
         );
 
         //세션 정보 변경
-        principalDetails.setUser(user);
+        principalDetails.updateUser(user);
     }
 
     @Transactional
@@ -100,7 +100,7 @@ public class UserService {
 
         //좋아요 수 확인
         user.getPostList().forEach(post -> {
-            post.setLikesCount(post.getLikeList().size());
+            post.updateLikesCount(post.getLikesList().size());
         });
 
         return userProfileDto;

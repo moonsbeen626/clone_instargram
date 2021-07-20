@@ -12,6 +12,8 @@ import moon.clone.instargram.web.dto.post.PostUpdateDto;
 import moon.clone.instargram.web.dto.post.PostInfoDto;
 import moon.clone.instargram.web.dto.post.PostUploadDto;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,15 +67,16 @@ public class PostService {
         postInfoDto.setCreatedate(post.getCreateDate());
 
         //포스트 정보 요청시 포스트 엔티티의 likesCount도 설정해준다.
-        post.setLikesCount(post.getLikeList().size());
+        post.updateLikesCount(post.getLikesList().size());
         postInfoDto.setLikesCount(post.getLikesCount());
 
         User user = userRepository.findUserById(sessionId);
         if(user.getId() == post.getUser().getId()) postInfoDto.setUploader(true);
         else postInfoDto.setUploader(false);
 
-        if(likesRepository.findLikesByPostAndUser(post, user) != null) postInfoDto.setLikeState(true);
-        else postInfoDto.setLikeState(false);
+        postInfoDto.setLikeState(post.isLikesState());
+//        if(likesRepository.findLikesByPostAndUser(post, user) != null) postInfoDto.setLikeState(true);
+//        else postInfoDto.setLikeState(false);
 
         return postInfoDto;
     }
@@ -99,8 +102,6 @@ public class PostService {
         post.update(postUpdateDto.getTag(), postUpdateDto.getText());
     }
 
-    @Value("${post.path}")
-    private String uploadFolder;
     @Transactional
     public void delete(long postId) {
         Post post = postRepository.findPostById(postId);
@@ -109,9 +110,23 @@ public class PostService {
         likesRepository.deleteLikesByPost(post);
 
         //관련 파일 저장 위치에서 삭제해 준다.
-        File file = new File(uploadFolder + post.getPostImgUrl());
+        File file = new File(uploadUrl + post.getPostImgUrl());
         file.delete();
 
         postRepository.deletePostById(postId);
+    }
+
+    @Transactional
+    public Page<Post> mainStory(long sessionId, Pageable pageable) {
+        Page<Post> postList = postRepository.mainStory(sessionId, pageable);
+
+        postList.forEach(post -> {
+            post.updateLikesCount(post.getLikesList().size());
+            post.getLikesList().forEach(likes -> {
+                if(likes.getUser().getId() == sessionId) post.updateLikesState(true);
+            });
+        });
+
+        return postList;
     }
 }

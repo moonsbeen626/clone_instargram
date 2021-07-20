@@ -29,4 +29,10 @@ public class IndexController {
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
         return "redirect:/login";
     }
+
+    //메인 sroty화면으로 이동
+    @GetMapping({"/", "post/story"})
+    public String story() {
+        return "post/story";
+    }
 }
