@@ -120,6 +120,11 @@
     </div>
     <footer th:replace="layout/common :: footer('footer')"></footer>
 </main>
+<script th:inline="javascript">
+    /*[# sec:authorize="isAuthenticated()"]*/
+    let principalId = /*[[${#authentication.principal.user.id}]]*/
+    /*[/]*/
+</script>
 <script src="/js/profile.js"></script>
 </body>
 </html>

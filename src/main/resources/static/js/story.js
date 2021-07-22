@@ -1,5 +1,3 @@
-let principalId = $("#principalId").val();
-
 // (1) 스토리 로드하기
 let page = 0;
 
@@ -51,23 +49,32 @@ function getStoryItem(post) {
                 <div class="subscribe__img">
                     <span>${post.createDate.toLocaleString()}</span>
                 </div>
-            </div>
-	        <div class="comment">
-		        <div class="comment_input">
-                    <input id="input-comment-post-${post.id}" class="input-comment-post" type="text" placeholder="댓글 달기..." >
-                    <button type="submit" class="submit-comment" disabled>게시</button>
+                <div class="comment-section" >
+                <ul class="comments" id="storyCommentList-${post.id}">`;
+
+                post.commentList.forEach((comment)=>{
+                    item += `<li id="storyCommentItem-${comment.id}">
+                                <span><span class="point-span userID">${comment.user.name}</span>${comment.text}</span>`;
+                                if(principalId == comment.user.id) {
+                                    item += `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
+                                                <i class="fas fa-times"></i>
+                                            </button>`;
+                                }
+                    item += `</li>`});
+                item += `
+                </ul>
                 </div>
-	        </div>
+            </div>
+            <div class="comment_input">
+                    <input id="storyCommentInput-${post.id}" class="input-comment" type="text" placeholder="댓글 달기..." >
+                    <button type="button" class="submit-comment" onClick="addComment(${post.id})">게시</button>
+            </div>
         </article>`;
         return item;
 }
 
 // (2) 스토리 스크롤 페이징하기
 $(window).scroll(() => {
-    //console.log("윈도우 scrollTop", $(window).scrollTop());
-    //console.log("문서의 높이", $(document).height());
-    //console.log("윈도우 높이", $(window).height());
-
     let checkNum = $(window).scrollTop() - ( $(document).height() - $(window).height() );
     //console.log(checkNum);
 
@@ -113,4 +120,55 @@ function toggleLike(postId) {
             console.log("오류", error);
         });
     }
+}
+
+//댓글 추가
+function addComment(postId) {
+    let commentInput = $(`#storyCommentInput-${postId}`);
+    let commentList = $(`#storyCommentList-${postId}`);
+
+    let data = {
+        postId: postId,
+        text: commentInput.val()
+    }
+
+    if (data.text === "") {
+        alert("댓글을 작성해주세요!");
+        return;
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/api/comment",
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).done(res=>{
+        console.log("성공", res);
+        let comment = res;
+        let content = `
+		    <li id="storyCommentItem-${comment.id}">
+                 <span><span class="point-span userID">${comment.user.name}</span>${comment.text}</span>
+                 <button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
+                    <i class="fas fa-times"></i>
+                 </button>
+            </li>`;
+        commentList.append(content);
+    }).fail(error=>{
+        console.log("오류", error);
+    });
+
+    commentInput.val(""); // 인풋 필드를 깨끗하게 비워준다.
+}
+
+function deleteComment(commentId) {
+    $.ajax({
+        type: "delete",
+        url: `/api/comment/${commentId}`
+    }).done(res=>{
+        console.log("성공", res);
+        $(`#storyCommentItem-${commentId}`).remove();
+    }).fail(error=>{
+        console.log("오류", error);
+    });
 }

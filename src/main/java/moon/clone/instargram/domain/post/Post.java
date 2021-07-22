@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import moon.clone.instargram.domain.comment.Comment;
 import moon.clone.instargram.domain.likes.Likes;
 import moon.clone.instargram.domain.user.User;
 
@@ -33,6 +34,11 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Likes> likesList;
 
+    @OrderBy("id")
+    @JsonIgnoreProperties({"post"})
+    @OneToMany(mappedBy = "post")
+    private List<Comment> commentList;
+
     @Transient
     private long likesCount;
 
@@ -55,6 +61,10 @@ public class Post {
         this.likesCount = likesCount;
     }
 
+    public void makePostById(long id) {
+        this.id = id;
+    }
+
     public void update(String tag, String text) {
         this.tag = tag;
         this.text = text;
@@ -66,5 +76,9 @@ public class Post {
 
     public void updateLikesState(boolean likesState) {
         this.likesState = likesState;
+    }
+
+    public void updatePostId(long id) {
+        this.id = id;
     }
 }

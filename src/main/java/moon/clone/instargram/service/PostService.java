@@ -2,6 +2,7 @@ package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.config.auth.PrincipalDetails;
+import moon.clone.instargram.domain.comment.CommentRepository;
 import moon.clone.instargram.domain.likes.LikesRepository;
 import moon.clone.instargram.domain.post.Post;
 import moon.clone.instargram.domain.post.PostRepository;
@@ -31,6 +32,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final LikesRepository likesRepository;
+    private final CommentRepository commentRepository;
 
     @Value("${post.path}")
     private String uploadUrl;
@@ -66,17 +68,16 @@ public class PostService {
         postInfoDto.setPostImgUrl(post.getPostImgUrl());
         postInfoDto.setCreatedate(post.getCreateDate());
 
-        //포스트 정보 요청시 포스트 엔티티의 likesCount도 설정해준다.
-        post.updateLikesCount(post.getLikesList().size());
-        postInfoDto.setLikesCount(post.getLikesCount());
+        //포스트 정보 요청시 포스트 엔티티의 likesCount, likesState, CommentList를 설정해준다.
+        postInfoDto.setLikesCount(post.getLikesList().size());
+        post.getLikesList().forEach(likes -> {
+            if(likes.getUser().getId() == sessionId) postInfoDto.setLikeState(true);
+        });
+        postInfoDto.setCommentList(post.getCommentList());
 
         User user = userRepository.findUserById(sessionId);
         if(user.getId() == post.getUser().getId()) postInfoDto.setUploader(true);
         else postInfoDto.setUploader(false);
-
-        postInfoDto.setLikeState(post.isLikesState());
-//        if(likesRepository.findLikesByPostAndUser(post, user) != null) postInfoDto.setLikeState(true);
-//        else postInfoDto.setLikeState(false);
 
         return postInfoDto;
     }
@@ -108,6 +109,9 @@ public class PostService {
 
         //관련된 likes의 정보 먼저 삭제해 준다.
         likesRepository.deleteLikesByPost(post);
+
+        //관련된 Comment의 정보 먼저 삭제해 준다.
+        commentRepository.deleteCommentsByPost(post);
 
         //관련 파일 저장 위치에서 삭제해 준다.
         File file = new File(uploadUrl + post.getPostImgUrl());

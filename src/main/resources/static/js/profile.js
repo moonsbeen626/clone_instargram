@@ -3,7 +3,6 @@ function toggleSubscribe(toUserId, obj) {
         $.ajax({
             type: "delete",
             url: "/api/follow/" + toUserId,
-            dataType: "text"
         }).done(res => {
             $(obj).text("팔로우");
             $(obj).toggleClass("blue");
@@ -14,7 +13,6 @@ function toggleSubscribe(toUserId, obj) {
         $.ajax({
             type: "post",
             url: "/api/follow/" + toUserId,
-            dataType: "text"
         }).done(res => {
             $(obj).text("언팔로우");
             $(obj).toggleClass("blue");
@@ -64,7 +62,6 @@ function getfollowModalItem(follow) {
 		<h2>${follow.name}</h2>
 	</div>
 	<div class="subscribe__btn">`;
-    console.log(follow.followState);
     if(!follow.loginUser){
         if(follow.followState){
             item += `<button class="cta-follow blue" onclick="toggleSubscribe(${follow.id}, this)">언팔로우</button>`;
@@ -154,14 +151,25 @@ function getPostModalInfo(postInfoDto) {
         <div class="subscribe__img">
             <span>${postInfoDto.createdate.toLocaleString()}</span>
         </div>
-        <div class="comment-info"></div>
-	        <div class="comment">
-		        <div class="comment_input">
-                    <input id="input-comment-post" class="input-comment-post" type="text" placeholder="댓글 달기..." >
-                    <button type="submit" class="submit-comment" disabled>게시</button>
-                </div>
-	        </div>
-	    </div>
+        <div class="comment-section" >
+                <ul class="comments" id="storyCommentList-${postInfoDto.id}">`;
+                    postInfoDto.commentList.forEach((comment)=>{
+                    item += `<li id="storyCommentItem-${comment.id}">
+                               <span><span class="point-span userID">${comment.user.name}</span>${comment.text}</span>`;
+                                if(principalId == comment.user.id) {
+                                    item += `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
+                                                <i class="fas fa-times"></i>
+                                            </button>`;
+                                }
+                    item += `</li>`});
+                item += `
+                </ul>
+            </div>
+            <div class="comment_input">
+                    <input id="storyCommentInput-${postInfoDto.id}" class="input-comment-post" type="text" placeholder="댓글 달기..." >
+                    <button type="button" class="submit-comment" onClick="addComment(${postInfoDto.id})">게시</button>
+            </div>
+        </div>
     </div>`;
     return item;
 }
@@ -201,4 +209,55 @@ function toggleLike(postId) {
             console.log("오류", error);
         });
     }
+}
+
+//댓글 추가
+function addComment(postId) {
+    let commentInput = $(`#storyCommentInput-${postId}`);
+    let commentList = $(`#storyCommentList-${postId}`);
+
+    let data = {
+        postId: postId,
+        text: commentInput.val()
+    }
+
+    if (data.text === "") {
+        alert("댓글을 작성해주세요!");
+        return;
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/api/comment",
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).done(res=>{
+        console.log("성공", res);
+        let comment = res;
+        let content = `
+		    <li id="storyCommentItem-${comment.id}">
+                 <span><span class="point-span userID">${comment.user.name}</span>${comment.text}</span>
+                 <button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
+                    <i class="fas fa-times"></i>
+                 </button>
+            </li>`;
+        commentList.append(content);
+    }).fail(error=>{
+        console.log("오류", error);
+    });
+
+    commentInput.val(""); // 인풋 필드를 깨끗하게 비워준다.
+}
+
+function deleteComment(commentId) {
+    $.ajax({
+        type: "delete",
+        url: `/api/comment/${commentId}`
+    }).done(res=>{
+        console.log("성공", res);
+        $(`#storyCommentItem-${commentId}`).remove();
+    }).fail(error=>{
+        console.log("오류", error);
+    });
 }

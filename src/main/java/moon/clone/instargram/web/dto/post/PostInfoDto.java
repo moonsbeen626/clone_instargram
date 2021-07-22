@@ -1,8 +1,10 @@
 package moon.clone.instargram.web.dto.post;
 
 import lombok.*;
+import moon.clone.instargram.domain.comment.Comment;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -20,4 +22,5 @@ public class PostInfoDto {
     private boolean likeState;
     private boolean uploader;
     private String postImgUrl;
+    private List<Comment> commentList;
 }
