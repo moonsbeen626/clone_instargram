@@ -3,13 +3,18 @@ let page = 0;
 
 function storyLoad() {
     $.ajax({
-        url: `/api/post/story?page=${page}`,
+        url: `/api/post/search?tag=${tag}&page=${page}`,
         dataType: "json"
     }).done(res => {
-        res.content.forEach((post) => {
-            let postItem = getStoryItem(post);
-            $("#feeds").append(postItem);
-        });
+        if(res.content.length == 0) {
+            let item = `<article><header>검색 결과가 없습니다.</header></article>`;
+            $("#feeds").append(item);
+        } else{
+            res.content.forEach((post) => {
+                let postItem = getStoryItem(post);
+                $("#feeds").append(postItem);
+            });
+        }
     }).fail(error => {
         console.log("오류", error);
     });
@@ -18,7 +23,7 @@ function storyLoad() {
 storyLoad();
 
 function getStoryItem(post) {
-        let item = `
+    let item = `
         <article>
             <header>
                 <div class="profile-of-article">
@@ -31,12 +36,12 @@ function getStoryItem(post) {
             </div>
             <div class="icons-react">
                 <div class="icons-left">`;
-            if(post.likesState) {
-                item += `<i class="fas fa-heart active" id="storyLikeIcon-${post.id}" onclick="toggleLike(${post.id})">${post.likesCount}</i>`;
-            } else {
-                item += `<i class="far fa-heart" id="storyLikeIcon-${post.id}" onclick="toggleLike(${post.id})">${post.likesCount}</i>`;
-            }
-            item += `
+    if(post.likesState) {
+        item += `<i class="fas fa-heart active" id="storyLikeIcon-${post.id}" onclick="toggleLike(${post.id})">${post.likesCount}</i>`;
+    } else {
+        item += `<i class="far fa-heart" id="storyLikeIcon-${post.id}" onclick="toggleLike(${post.id})">${post.likesCount}</i>`;
+    }
+    item += `
                 </div>
             </div>
             <div class="reaction">
@@ -44,12 +49,12 @@ function getStoryItem(post) {
 	                <span>${post.text}</span>
                 </div>
 	            <div class="tag">`;
-                    let arr = post.tag.split(',');
+    let arr = post.tag.split(',');
 
-                    for(let i = 0; i < arr.length; i++) {
-                        item += `<span class="tag-span" onclick="location.href='/post/search?tag=${arr[i]}'">#${arr[i]} </span>`;
-                    }
-                    item += `
+    for(let i = 0; i < arr.length; i++) {
+        item += `<span class="tag-span" onclick="location.href='/post/search?tag=${arr[i]}'">#${arr[i]} </span>`;
+    }
+    item += `
                 </div>
                 <div class="subscribe__img">
                     <span>${post.createDate.toLocaleString()}</span>
@@ -57,16 +62,16 @@ function getStoryItem(post) {
                 <div class="comment-section" >
                 <ul class="comments" id="storyCommentList-${post.id}">`;
 
-                post.commentList.forEach((comment)=>{
-                    item += `<li id="storyCommentItem-${comment.id}">
+    post.commentList.forEach((comment)=>{
+        item += `<li id="storyCommentItem-${comment.id}">
                                 <span><span class="point-span userID">${comment.user.name}</span>${comment.text}</span>`;
-                                if(principalId == comment.user.id) {
-                                    item += `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
+        if(principalId == comment.user.id) {
+            item += `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
                                                 <i class="fas fa-times"></i>
                                             </button>`;
-                                }
-                    item += `</li>`});
-                item += `
+        }
+        item += `</li>`});
+    item += `
                 </ul>
                 </div>
             </div>
@@ -75,7 +80,7 @@ function getStoryItem(post) {
                     <button type="button" class="submit-comment" onClick="addComment(${post.id})">게시</button>
             </div>
         </article>`;
-        return item;
+    return item;
 }
 
 // (2) 스토리 스크롤 페이징하기
@@ -177,3 +182,5 @@ function deleteComment(commentId) {
         console.log("오류", error);
     });
 }
+
+

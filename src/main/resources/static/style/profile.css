@@ -61,6 +61,7 @@
     border-radius: 50%;
     align-content: center;
     z-index: 1;
+    object-fit: cover;
 }
 .profile .profile-right .name-group {
     display: flex;

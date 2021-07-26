@@ -144,8 +144,13 @@ function getPostModalInfo(postInfoDto) {
 	        <div class="text">
 	            <span>${postInfoDto.text}</span>
             </div>
-	        <div class="tag">
-	            <span>${postInfoDto.tag}</span>
+	        <div class="tag">`;
+                    let arr = postInfoDto.tag.split(',');
+
+                    for(let i = 0; i < arr.length; i++) {
+                        item += `<span class="tag-span" onclick="location.href='/post/search?tag=${arr[i]}'">#${arr[i]} </span>`;
+                    }
+                    item += `
             </div>
         </div>
         <div class="subscribe__img">

@@ -376,3 +376,9 @@ ul.story-list .profile-text {
     cursor: pointer;
 }
 
+.tag-span {
+    color:blue;
+    cursor:pointer;
+}
+
+

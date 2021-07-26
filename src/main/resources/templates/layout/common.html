@@ -23,7 +23,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </head>
 
 <nav th:fragment="menu(menu)">
@@ -32,7 +31,7 @@
         <div class="nav-1">
             <img class="logo_instagram" src="/img/logo_text.png" alt="logo_text">
         </div>
-        <input id="searchInput" type="search" class="input-search" placeholder="검색">
+        <form action="/post/searchForm" method="post"><input id="tag" name="tag" type="text" class="input-search" placeholder="검색"></form>
         <div class="nav-2">
             <a href="/post/story"><img src="/img/home.png" alt="홈"></a>
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">

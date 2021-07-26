@@ -57,4 +57,19 @@ public class PostController {
         redirectAttributes.addAttribute("id", principalDetails.getUser().getId());
         return "redirect:/user/profile";
     }
+
+    //검색 페이지 - 게시글의 태그 눌러서 이동
+    @GetMapping("/post/search")
+    public String search(@RequestParam("tag") String tag, Model model) {
+        model.addAttribute("tag", tag);
+        return "post/search";
+    }
+
+    //검색 폼 입력 후 페이지 이동
+    @PostMapping("/post/searchForm")
+    public String searchForm(String tag, Model model, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute("tag", tag);
+        //model.addAttribute("tag", tag);
+        return "redirect:/post/search";
+    }
 }

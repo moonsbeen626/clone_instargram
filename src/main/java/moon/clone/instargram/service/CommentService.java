@@ -21,9 +21,7 @@ public class CommentService {
 
     @Transactional
     public Comment addComment(String text, long postId, long sessionId) {
-        //Post post = postRepository.findPostById(postId);
-        Post post = new Post();
-        post.updatePostId(postId);
+        Post post = postRepository.findPostById(postId);
         User user = userRepository.findUserById(sessionId);
         Comment comment = Comment.builder()
                 .text(text)
