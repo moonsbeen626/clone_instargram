@@ -6,15 +6,14 @@ function storyLoad() {
         url: `/api/post/search?tag=${tag}&page=${page}`,
         dataType: "json"
     }).done(res => {
-        if(res.content.length == 0) {
-            let item = `<article><header>검색 결과가 없습니다.</header></article>`;
-            $("#feeds").append(item);
-        } else{
-            res.content.forEach((post) => {
-                let postItem = getStoryItem(post);
-                $("#feeds").append(postItem);
-            });
+        if(res.totalElements == 0) {
+            alert("검색 결과가 없습니다.");
+            window.history.back();
         }
+        res.content.forEach((post) => {
+            let postItem = getStoryItem(post);
+            $("#feeds").append(postItem);
+        });
     }).fail(error => {
         console.log("오류", error);
     });

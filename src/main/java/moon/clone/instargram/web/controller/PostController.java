@@ -67,9 +67,8 @@ public class PostController {
 
     //검색 폼 입력 후 페이지 이동
     @PostMapping("/post/searchForm")
-    public String searchForm(String tag, Model model, RedirectAttributes redirectAttributes) {
+    public String searchForm(String tag, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("tag", tag);
-        //model.addAttribute("tag", tag);
         return "redirect:/post/search";
     }
 }
