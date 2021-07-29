@@ -485,14 +485,14 @@
 }
 .modal-post .subscribe {
     width: 400px;
-    height: 700px;
+    height: 800px;
     background-color: #fff;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
 }
 .modal-post .subscribe .subscribe-header {
-    text-align: center;
+    /*text-align: center;*/
     line-height: 50px;
     font-weight: bold;
     border-bottom: 1px solid #ddd;
@@ -535,7 +535,8 @@
     align-items: center;
 }
 .post-box img {
-    width: 100%;
+    width: inherit;
+    height: 400px;
     object-fit: cover;
 }
 .comment {
@@ -552,6 +553,7 @@
     height: 18px;
     padding: 28px 16px;
     border-style: none;
+    border-radius: 10px;
     box-sizing: border-box;
     color: #262626;
 }
@@ -660,4 +662,20 @@ button.submit-comment:focus {
     .profileContainer {
         width: 100%;
     }
+}
+
+.post-div {
+    overflow-y: auto;
+    height: 290px;
+}
+
+.post-img-profile {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #fafafa;
+    border-radius: 100%;
+    align-content: center;
+    position: relative;
+    top: 10px;
+    margin-left: 5px;
 }

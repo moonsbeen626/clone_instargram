@@ -1,106 +1,45 @@
-function toggleSubscribe(toUserId, obj) {
-    if ($(obj).text() === "언팔로우") {
-        $.ajax({
-            type: "delete",
-            url: "/api/follow/" + toUserId,
-        }).done(res => {
-            $(obj).text("팔로우");
-            $(obj).toggleClass("blue");
-        }).fail(error => {
-            console.log("언팔로우 실패", error);
-        });
-    } else {
-        $.ajax({
-            type: "post",
-            url: "/api/follow/" + toUserId,
-        }).done(res => {
-            $(obj).text("언팔로우");
-            $(obj).toggleClass("blue");
-        }).fail(error => {
-            console.log("팔로우 실패", error);
-        });
-    }
-}
+let page = 0;
 
-function followerInfoModalOpen(profileId) {
-    $(".modal-follower").css("display", "flex");
-
+function storyLoad() {
     $.ajax({
-        url: `/api/follow/${profileId}/follower`,
+        url: `/api/post/likesPost?page=${page}`,
         dataType: "json"
     }).done(res => {
-        res.forEach((follow) => {
-            let item = getfollowModalItem(follow);
-            $("#followerModalList").append(item);
-        });
-    }).fail(error => {
-        console.log("구독정보 불러오기 오류", error);
-    });
-}
-function followingInfoModalOpen(profileId) {
-    $(".modal-following").css("display", "flex");
+        if(res.totalElements == 0) {
 
-    $.ajax({
-        url: `/api/follow/${profileId}/following`,
-        dataType: "json"
-    }).done(res => {
-        res.forEach((follow) => {
-            let item = getfollowModalItem(follow);
-            $("#followingModalList").append(item);
-        });
-    }).fail(error => {
-        console.log("구독정보 불러오기 오류", error);
-    });
-}
-
-function getfollowModalItem(follow) {
-    let item = `<div class="subscribe__item" id="subscribeModalItem-${follow.id}">
-	<div class="subscribe__img">
-		<a href="/user/profile?id=${follow.id}" ><img src="/profile_imgs/${follow.profileImgUrl}" onerror="this.src='/img/default_profile.jpg';" /></a>
-	</div>
-	<div class="subscribe__text">
-		<h2>${follow.name}</h2>
-	</div>
-	<div class="subscribe__btn">`;
-    if(!follow.loginUser){
-        if(follow.followState){
-            item += `<button class="cta-follow blue" onclick="toggleSubscribe(${follow.id}, this)">언팔로우</button>`;
-        }else{
-            item += `<button class="cta-follow" onclick="toggleSubscribe(${follow.id}, this)">팔로우</button>`;
         }
+        res.content.forEach((post) => {
+            let postItem = getLikesItem(post);
+            $("#img-box").append(postItem);
+        });
+    }).fail(error => {
+        console.log("오류", error);
+    });
+}
+
+storyLoad();
+
+$(window).scroll(() => {
+    let checkNum = $(window).scrollTop() - ($(document).height() - $(window).height() );
+    //console.log(checkNum);
+
+    if(checkNum < 1 && checkNum > -1){
+        page++;
+        storyLoad();
     }
-    item += `
-	</div>
-</div>`;
+});
+
+function getLikesItem(post) {
+    let item = `
+        <div class="img-box" onclick="postPopup(${post.id}, '.modal-post')" >                   
+            <img src="/upload/${post.postImgUrl}" onerror="this.src='/img/default_profile.jpg';" />
+                <div class="comment">
+                    <a> <i class="fas fa-heart"></i><span>${post.likesCount}</span></a>
+                </div>
+        </div>
+    `;
+
     return item;
-}
-
-function popup(obj) {
-    $(obj).css("display", "flex");
-}
-
-function closePopup(obj) {
-    $(obj).css("display", "none");
-}
-
-// 사용자 정보(회원정보, 로그아웃, 닫기) 모달
-function modalInfo() {
-    $(".modal-info").css("display", "none");
-}
-
-// (6) 사용자 프로파일 이미지 메뉴(사진업로드, 취소) 모달
-function modalImage() {
-    $(".modal-image").css("display", "none");
-}
-
-// (7) 구독자 정보 모달 닫기
-function modalClose() {
-    $(".modal-follower").css("display", "none");
-    location.reload();
-}
-function modalClose() {
-    $(".modal-following").css("display", "none");
-    location.reload();
 }
 
 //포스트
@@ -116,6 +55,11 @@ function postPopup(postId, obj) {
     }).fail(error => {
         console.log("post 정보 불러오기 오류", error);
     });
+}
+
+function modalClose() {
+    $(".modal-post").css("display", "none");
+    location.reload();
 }
 
 function getPostModalInfo(postInfoDto) {
@@ -136,23 +80,23 @@ function getPostModalInfo(postInfoDto) {
 	    <div class="post-div">
 	    <div class="post-info">
 	        <div class="text"> `;
-            if(postInfoDto.likeState) {
-                item += `<i class="fas fa-heart active" id="storyLikeIcon" onclick="toggleLike(${postInfoDto.id})">${postInfoDto.likesCount}</i>`;
-            } else {
-                item += `<i class="far fa-heart" id="storyLikeIcon" onclick="toggleLike(${postInfoDto.id})">${postInfoDto.likesCount}</i>`;
-            }
-            item += `
+    if(postInfoDto.likeState) {
+        item += `<i class="fas fa-heart active" id="storyLikeIcon" onclick="toggleLike(${postInfoDto.id})">${postInfoDto.likesCount}</i>`;
+    } else {
+        item += `<i class="far fa-heart" id="storyLikeIcon" onclick="toggleLike(${postInfoDto.id})">${postInfoDto.likesCount}</i>`;
+    }
+    item += `
             </div>
 	        <div class="text">
 	            <span>${postInfoDto.text}</span>
             </div>
 	        <div class="tag">`;
-                    let arr = postInfoDto.tag.split(',');
+    let arr = postInfoDto.tag.split(',');
 
-                    for(let i = 0; i < arr.length; i++) {
-                        item += `<span class="tag-span" onclick="location.href='/post/search?tag=${arr[i]}'">#${arr[i]} </span>`;
-                    }
-                    item += `
+    for(let i = 0; i < arr.length; i++) {
+        item += `<span class="tag-span" onclick="location.href='/post/search?tag=${arr[i]}'">#${arr[i]} </span>`;
+    }
+    item += `
             </div>
         </div>
         <div class="subscribe__img">
@@ -160,16 +104,16 @@ function getPostModalInfo(postInfoDto) {
         </div>
         <div class="comment-section" >
                 <ul class="comments" id="storyCommentList-${postInfoDto.id}">`;
-                    postInfoDto.commentList.forEach((comment)=>{
-                    item += `<li id="storyCommentItem-${comment.id}">
+    postInfoDto.commentList.forEach((comment)=>{
+        item += `<li id="storyCommentItem-${comment.id}">
                                <span><span class="point-span userID">${comment.user.name}</span>${comment.text}</span>`;
-                                if(principalId == comment.user.id) {
-                                    item += `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
+        if(principalId == comment.user.id) {
+            item += `<button onclick="deleteComment(${comment.id})" class="delete-comment-btn">
                                                 <i class="fas fa-times"></i>
                                             </button>`;
-                                }
-                    item += `</li>`});
-                item += `
+        }
+        item += `</li>`});
+    item += `
                 </ul>
             </div>
             </div>

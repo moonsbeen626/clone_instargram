@@ -171,6 +171,8 @@ header {
 }
 .main-image img {
     width: 612px;
+    height: 612px;
+    object-fit: cover;
 }
 .main-id {
     margin-left: 14px;

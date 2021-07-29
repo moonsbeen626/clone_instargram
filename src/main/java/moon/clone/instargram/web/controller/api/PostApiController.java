@@ -6,6 +6,7 @@ import moon.clone.instargram.domain.post.Post;
 import moon.clone.instargram.service.LikesService;
 import moon.clone.instargram.service.PostService;
 import moon.clone.instargram.web.dto.post.PostInfoDto;
+import moon.clone.instargram.web.dto.post.PostPreviewDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -46,5 +47,16 @@ public class PostApiController {
     public Page<Post> searchTag(@RequestParam String tag, @AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @PageableDefault(size=3) Pageable pageable) {
         return postService.searchResult(tag, principalDetails.getUser().getId(), pageable);
+    }
+
+    @GetMapping("/post/likesPost") //좋아요 누른 포스트 가져오기.
+    public Page<PostPreviewDto> getLikesPost(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                             @PageableDefault(size=12) Pageable pageable) {
+        return postService.getLikesPost(principalDetails.getUser().getId(), pageable);
+    }
+
+    @GetMapping("/post/popular") //좋아요 누른 포스트 가져오기.
+    public List<PostPreviewDto> getLikesPost() {
+        return postService.getPopularPost();
     }
 }

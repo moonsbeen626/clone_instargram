@@ -53,7 +53,7 @@
             <!--그냥 감싸는 div (지우면이미지커짐)-->
             <div id="tab-1-content" class="tab-content-item show">
                 <!--게시물컨 그리드배열-->
-                <div class="tab-1-content-inner">
+                <div class="tab-1-content-inner" id="img-box" >
                     <!--아이템들-->
                     <div class="img-box" th:each="post : ${userProfileDto.user.postList}" th:onclick="|postPopup(${post.id}, '.modal-post')|">
                         <img th:src="@{${'/upload/' + post.postImgUrl}}" />

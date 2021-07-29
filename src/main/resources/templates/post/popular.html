@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="layout/common :: head('Instargram')"></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<head th:replace="layout/common :: menu('menu')"></head>
+<main class="profile_main">
+    <!--게시물컨섹션-->
+    <section id="tab-content" class="likes-section">
+        <!--게시물컨컨테이너-->
+        <div class="profileContainer">
+            <!--그냥 감싸는 div (지우면이미지커짐)-->
+            <div id="tab-1-content" class="tab-content-item show">
+                <!--게시물컨 그리드배열-->
+                <div class="tab-1-content-inner" id ="popular-box">
+                    <!--아이템들-->
+
+                    <!--아이템들end-->
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<!--포스트 상세 정보 모달-->
+<div class="modal-post">
+    <div class="subscribe">
+        <div class="subscribe-list" id="postInfoModal"></div>
+    </div>
+</div>
+<!--포스트 상세 정보 모달 end-->
+<footer th:replace="layout/common :: footer('footer')"></footer>
+</body>
+<script th:inline="javascript">
+    /*[# sec:authorize="isAuthenticated()"]*/
+    let principalId = /*[[${#authentication.principal.user.id}]]*/
+    /*[/]*/
+</script>
+<script src="/js/popular.js"></script>
+</html>

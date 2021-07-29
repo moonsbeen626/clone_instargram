@@ -3,7 +3,6 @@ package moon.clone.instargram.web.controller;
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.config.auth.PrincipalDetails;
 import moon.clone.instargram.service.PostService;
-import moon.clone.instargram.service.UserService;
 import moon.clone.instargram.web.dto.post.PostDto;
 import moon.clone.instargram.web.dto.post.PostUpdateDto;
 import moon.clone.instargram.web.dto.post.PostUploadDto;
@@ -71,4 +70,17 @@ public class PostController {
         redirectAttributes.addAttribute("tag", tag);
         return "redirect:/post/search";
     }
+
+    //좋아요한 포스트 출력 페이지로 이동
+    @GetMapping("/post/likes")
+    public String likes() {
+        return "post/likes";
+    }
+
+    //인기 포스트 페이지로 이동
+    @GetMapping("/post/popular")
+    public String popular() {
+        return "post/popular";
+    }
+
 }
