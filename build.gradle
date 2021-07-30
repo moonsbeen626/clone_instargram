@@ -30,6 +30,7 @@ dependencies {
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.4.1'
     implementation group: 'org.qlrm', name: 'qlrm', version: '3.0.1'
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.5.1'
     implementation 'javax.servlet:jstl'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

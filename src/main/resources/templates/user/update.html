@@ -15,7 +15,7 @@
                     <img th:src="@{${'/profile_imgs/' + #authentication.getPrincipal().getUser().getProfileImgUrl()}}" onerror="this.src='/img/default_profile.jpg';"/>
                 </div>
                 <div class="item__username">
-                    <h2 sec:authentication="name" ></h2>
+                    <h2 th:text="${#authentication.getPrincipal().getUser().getName()}" ></h2>
                 </div>
             </div>
             <!--프로필셋팅 아이디영역end-->
