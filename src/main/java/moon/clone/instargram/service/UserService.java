@@ -5,6 +5,7 @@ import moon.clone.instargram.config.auth.PrincipalDetails;
 import moon.clone.instargram.domain.follow.FollowRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
+import moon.clone.instargram.handler.ex.CustomValidationException;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import moon.clone.instargram.web.dto.user.UserSignupDto;
 import moon.clone.instargram.web.dto.user.UserUpdateDto;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 @Service
@@ -47,8 +49,8 @@ public class UserService {
     private String uploadFolder;
 
     @Transactional
-    public void update(UserUpdateDto userUpdateDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
-        User user = userRepository.findUserById(userUpdateDto.getId());
+    public void updateUser (UserUpdateDto userUpdateDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(() -> { return new CustomValidationException("찾을 수 없는 id입니다.");});
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         String imageFileName = user.getId() + "_" + multipartFile.getOriginalFilename();

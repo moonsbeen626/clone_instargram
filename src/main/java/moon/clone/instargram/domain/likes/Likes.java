@@ -13,6 +13,14 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name="likes_uk",
+                        columnNames = {"post_id", "user_id"}
+                )
+        }
+)
 public class Likes {
 
     @Id

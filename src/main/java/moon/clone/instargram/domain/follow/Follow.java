@@ -10,6 +10,14 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name="subscribe_uk",
+                        columnNames = {"from_user_id", "to_user_id"}
+                )
+        }
+)
 public class Follow {
 
     @Id

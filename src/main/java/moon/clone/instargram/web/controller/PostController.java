@@ -2,6 +2,7 @@ package moon.clone.instargram.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.config.auth.PrincipalDetails;
+import moon.clone.instargram.handler.ex.CustomValidationException;
 import moon.clone.instargram.service.PostService;
 import moon.clone.instargram.web.dto.post.PostDto;
 import moon.clone.instargram.web.dto.post.PostUpdateDto;
@@ -27,7 +28,11 @@ public class PostController {
 
     //포스트 업로드 후 프로필 화면으로 이동
     @PostMapping("post")
-    public String uploadPost(PostUploadDto postUploadDto, @RequestParam("uploadImgUrl") MultipartFile multipartFile, RedirectAttributes redirectAttributes, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String uploadPost(PostUploadDto postUploadDto, @RequestParam("uploadImgUrl") MultipartFile multipartFile,
+                             RedirectAttributes redirectAttributes, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        if(multipartFile.isEmpty()) {
+            throw new CustomValidationException("이미지가 첨부되지 않았습니다");
+        }
         postService.save(postUploadDto, multipartFile, principalDetails);
         redirectAttributes.addAttribute("id", principalDetails.getUser().getId());
         return "redirect:/user/profile";

@@ -2,6 +2,7 @@ package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.likes.LikesRepository;
+import moon.clone.instargram.handler.ex.CustomApiException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

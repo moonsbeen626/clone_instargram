@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import moon.clone.instargram.domain.post.Post;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,12 +20,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
     private String phone;
+
+    @Column(length = 30, nullable = false)
     private String name;
+
     private String title;
     private String website;
+
     private String profileImgUrl;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

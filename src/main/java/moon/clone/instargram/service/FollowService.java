@@ -2,6 +2,7 @@ package moon.clone.instargram.service;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.domain.follow.FollowRepository;
+import moon.clone.instargram.handler.ex.CustomApiException;
 import moon.clone.instargram.web.dto.follow.FollowDto;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,11 @@ public class FollowService {
 
     @Transactional
     public void follow(long fromUserId, long toUserId) {
-        followRepository.follow(fromUserId, toUserId);
+        try {
+            followRepository.follow(fromUserId, toUserId);
+        } catch (Exception e) {
+            throw new CustomApiException("이미 팔로우 하였습니다.");
+        }
     }
 
     @Transactional
