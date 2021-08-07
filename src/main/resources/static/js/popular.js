@@ -145,6 +145,7 @@ function toggleLike(postId) {
             likeIcon.addClass("far");
         }).fail(error=>{
             console.log("오류", error);
+            alert(error.responseText);
         });
     }
 }

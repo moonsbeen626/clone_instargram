@@ -45,17 +45,8 @@ public class UserController {
     @PostMapping("/user/update")
     public String updateUser(@Valid UserUpdateDto userUpdateDto, BindingResult bindingResult, @RequestParam("profileImgUrl") MultipartFile multipartFile,
                              RedirectAttributes redirectAttributes, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationException("유효성 검사 실패", errorMap);
-        }
-        else {
-            userService.updateUser(userUpdateDto, multipartFile, principalDetails);
-            redirectAttributes.addAttribute("id", principalDetails.getUser().getId());
-            return "redirect:/user/profile";
-        }
+        userService.updateUser(userUpdateDto, multipartFile, principalDetails);
+        redirectAttributes.addAttribute("id", principalDetails.getUser().getId());
+        return "redirect:/user/profile";
     }
 }

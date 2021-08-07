@@ -253,6 +253,7 @@ function addComment(postId) {
         commentList.append(content);
     }).fail(error=>{
         console.log("오류", error);
+        alert(error.responseText);
     });
 
     commentInput.val(""); // 인풋 필드를 깨끗하게 비워준다.

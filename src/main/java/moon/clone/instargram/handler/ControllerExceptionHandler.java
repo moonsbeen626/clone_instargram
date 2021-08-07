@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController //데이터 return
 @ControllerAdvice //모든 예외 처리 담당
 public class ControllerExceptionHandler {

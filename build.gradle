@@ -31,6 +31,7 @@ dependencies {
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.2'
     implementation group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.5.1'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.5.2'
     implementation 'javax.servlet:jstl'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
