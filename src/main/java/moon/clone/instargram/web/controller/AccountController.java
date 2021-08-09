@@ -28,7 +28,7 @@ public class AccountController {
     //회원가입
     @PostMapping("/signup")
     public String signup(@Valid UserSignupDto userSignupDto, BindingResult bindingResult) {
-        if (userService.save(userSignupDto)) {
+        if (userService.save(userSignupDto) != null) {
             return "redirect:/login";
         } else {
             return "redirect:/signup?error";

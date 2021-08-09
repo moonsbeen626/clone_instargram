@@ -5,11 +5,13 @@ import moon.clone.instargram.config.auth.PrincipalDetails;
 import moon.clone.instargram.domain.follow.FollowRepository;
 import moon.clone.instargram.domain.user.User;
 import moon.clone.instargram.domain.user.UserRepository;
+import moon.clone.instargram.handler.ex.CustomApiException;
 import moon.clone.instargram.handler.ex.CustomValidationException;
 import moon.clone.instargram.web.dto.user.UserProfileDto;
 import moon.clone.instargram.web.dto.user.UserSignupDto;
 import moon.clone.instargram.web.dto.user.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,11 +31,10 @@ public class UserService {
     private final FollowRepository followRepository;
 
     @Transactional
-    public boolean save(UserSignupDto userSignupDto) {
-        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) return false;
-
+    public User save(UserSignupDto userSignupDto) throws RuntimeException {
+        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) return null;
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        userRepository.save(User.builder()
+        return userRepository.save(User.builder()
                 .email(userSignupDto.getEmail())
                 .password(encoder.encode(userSignupDto.getPassword()))
                 .phone(userSignupDto.getPhone())
@@ -42,7 +43,6 @@ public class UserService {
                 .website(null)
                 .profileImgUrl(null)
                 .build());
-        return true;
     }
 
     @Value("${profileImg.path}")
