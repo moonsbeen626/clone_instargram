@@ -2,7 +2,7 @@ let page = 0;
 
 function storyLoad() {
     $.ajax({
-        url: `/api/post/likesPost?page=${page}`,
+        url: `/api/post/likes?page=${page}`,
         dataType: "json"
     }).done(res => {
         if(res.totalElements == 0) {
@@ -147,7 +147,7 @@ function toggleLike(postId) {
     } else { // 좋아요취소 하겠다
         $.ajax({
             type: "delete",
-            url: `/api/post/${postId}/unLikes`,
+            url: `/api/post/${postId}/likes`,
             dataType: "text"
         }).done(res=>{
             let likeCountStr = $("#storyLikeIcon").text();

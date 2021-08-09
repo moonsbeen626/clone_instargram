@@ -26,15 +26,4 @@ public class FollowApiController {
     public void unFollowUser(@PathVariable long toUserId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         followService.unFollow(principalDetails.getUser().getId(), toUserId);
     }
-
-    @GetMapping("/follow/{profileId}/follower")
-    public List<FollowDto> getFollower(@PathVariable long profileId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<FollowDto> list = followService.getFollower(profileId, principalDetails.getUser().getId());
-        return list;
-    }
-
-    @GetMapping("/follow/{profileId}/following")
-    public List<FollowDto> getFollowing(@PathVariable long profileId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return followService.getFollowing(profileId, principalDetails.getUser().getId());
-    }
 }

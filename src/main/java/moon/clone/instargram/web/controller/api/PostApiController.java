@@ -33,30 +33,30 @@ public class PostApiController {
         likesService.likes(postId, principalDetails.getUser().getId());
     }
 
-    @DeleteMapping("/post/{postId}/unLikes")
+    @DeleteMapping("/post/{postId}/likes")
     public void unLikes(@PathVariable long postId , @AuthenticationPrincipal PrincipalDetails principalDetails) {
         likesService.unLikes(postId, principalDetails.getUser().getId());
     }
 
-    @GetMapping("/post/story")
+    @GetMapping("/post")
     public Page<Post> mainStory(@AuthenticationPrincipal PrincipalDetails principalDetails, @PageableDefault(size=3) Pageable pageable) {
         return postService.mainStory(principalDetails.getUser().getId(), pageable);
     }
 
-    @GetMapping("/post/search")
+    @GetMapping("/post/tag")
     public Page<Post> searchTag(@RequestParam String tag, @AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @PageableDefault(size=3) Pageable pageable) {
         return postService.searchResult(tag, principalDetails.getUser().getId(), pageable);
     }
 
-    @GetMapping("/post/likesPost") //좋아요 누른 포스트 가져오기.
+    @GetMapping("/post/likes")
     public Page<PostPreviewDto> getLikesPost(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              @PageableDefault(size=12) Pageable pageable) {
         return postService.getLikesPost(principalDetails.getUser().getId(), pageable);
     }
 
-    @GetMapping("/post/popular") //좋아요 누른 포스트 가져오기.
-    public List<PostPreviewDto> getLikesPost() {
+    @GetMapping("/post/popular")
+    public List<PostPreviewDto> getPopularPost() {
         return postService.getPopularPost();
     }
 }

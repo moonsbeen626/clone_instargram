@@ -133,7 +133,7 @@ function toggleLike(postId) {
     } else { // 좋아요취소 하겠다
         $.ajax({
             type: "delete",
-            url: `/api/post/${postId}/unLikes`,
+            url: `/api/post/${postId}/likes`,
             dataType: "text"
         }).done(res=>{
             let likeCountStr = $("#storyLikeIcon").text();

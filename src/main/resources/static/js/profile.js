@@ -26,7 +26,7 @@ function followerInfoModalOpen(profileId) {
     $(".modal-follower").css("display", "flex");
 
     $.ajax({
-        url: `/api/follow/${profileId}/follower`,
+        url: `/api/user/${profileId}/follower`,
         dataType: "json"
     }).done(res => {
         res.forEach((follow) => {
@@ -41,7 +41,7 @@ function followingInfoModalOpen(profileId) {
     $(".modal-following").css("display", "flex");
 
     $.ajax({
-        url: `/api/follow/${profileId}/following`,
+        url: `/api/user/${profileId}/following`,
         dataType: "json"
     }).done(res => {
         res.forEach((follow) => {
@@ -203,7 +203,7 @@ function toggleLike(postId) {
     } else { // 좋아요취소 하겠다
         $.ajax({
             type: "delete",
-            url: `/api/post/${postId}/unLikes`,
+            url: `/api/post/${postId}/likes`,
             dataType: "text"
         }).done(res=>{
             let likeCountStr = $("#storyLikeIcon").text();

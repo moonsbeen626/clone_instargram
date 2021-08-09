@@ -3,7 +3,7 @@ let page = 0;
 
 function storyLoad() {
     $.ajax({
-        url: `/api/post/story?page=${page}`,
+        url: `/api/post?page=${page}`,
         dataType: "json"
     }).done(res => {
         res.content.forEach((post) => {
@@ -111,7 +111,7 @@ function toggleLike(postId) {
     } else { // 좋아요취소 하겠다
         $.ajax({
             type: "delete",
-            url: `/api/post/${postId}/unLikes`,
+            url: `/api/post/${postId}/likes`,
             dataType: "text"
         }).done(res=>{
             let likeCountStr = $(`#storyLikeIcon-${postId}`).text();
