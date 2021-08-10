@@ -15,7 +15,11 @@ public class LikesService {
 
     @Transactional
     public void likes(long postId, long sessionId) {
-        likesRepository.likes(postId, sessionId);
+        try {
+            likesRepository.likes(postId, sessionId);
+        } catch (Exception e) {
+            throw new CustomApiException("이미 좋아요 하였습니다.");
+        }
     }
 
     @Transactional

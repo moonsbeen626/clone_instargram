@@ -2,18 +2,14 @@ package moon.clone.instargram.web.controller.api;
 
 import lombok.RequiredArgsConstructor;
 import moon.clone.instargram.config.auth.PrincipalDetails;
-import moon.clone.instargram.domain.post.Post;
 import moon.clone.instargram.service.LikesService;
 import moon.clone.instargram.service.PostService;
-import moon.clone.instargram.web.dto.post.PostInfoDto;
-import moon.clone.instargram.web.dto.post.PostPreviewDto;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,39 +20,41 @@ public class PostApiController {
     private final LikesService likesService;
 
     @GetMapping("/post/{postId}")
-    public PostInfoDto postInfo (@PathVariable long postId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return postService.getPostInfoDto(postId, principalDetails.getUser().getId());
+    public ResponseEntity<?> postInfo (@PathVariable long postId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return new ResponseEntity<>(postService.getPostInfoDto(postId, principalDetails.getUser().getId()), HttpStatus.OK);
     }
 
     @PostMapping("/post/{postId}/likes")
-    public void likes(@PathVariable long postId , @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> likes(@PathVariable long postId , @AuthenticationPrincipal PrincipalDetails principalDetails) {
         likesService.likes(postId, principalDetails.getUser().getId());
+        return new ResponseEntity<>("좋아요 성공", HttpStatus.OK);
     }
 
     @DeleteMapping("/post/{postId}/likes")
-    public void unLikes(@PathVariable long postId , @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> unLikes(@PathVariable long postId , @AuthenticationPrincipal PrincipalDetails principalDetails) {
         likesService.unLikes(postId, principalDetails.getUser().getId());
+        return new ResponseEntity<>("좋아요 취소 성공", HttpStatus.OK);
     }
 
     @GetMapping("/post")
-    public Page<Post> mainStory(@AuthenticationPrincipal PrincipalDetails principalDetails, @PageableDefault(size=3) Pageable pageable) {
-        return postService.mainStory(principalDetails.getUser().getId(), pageable);
+    public ResponseEntity<?> mainStory(@AuthenticationPrincipal PrincipalDetails principalDetails, @PageableDefault(size=3) Pageable pageable) {
+        return new ResponseEntity<>(postService.mainStory(principalDetails.getUser().getId(), pageable), HttpStatus.OK);
     }
 
     @GetMapping("/post/tag")
-    public Page<Post> searchTag(@RequestParam String tag, @AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<?> searchTag(@RequestParam String tag, @AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @PageableDefault(size=3) Pageable pageable) {
-        return postService.searchResult(tag, principalDetails.getUser().getId(), pageable);
+        return new ResponseEntity<>(postService.searchResult(tag, principalDetails.getUser().getId(), pageable), HttpStatus.OK);
     }
 
     @GetMapping("/post/likes")
-    public Page<PostPreviewDto> getLikesPost(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<?> getLikesPost(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              @PageableDefault(size=12) Pageable pageable) {
-        return postService.getLikesPost(principalDetails.getUser().getId(), pageable);
+        return new ResponseEntity<>(postService.getLikesPost(principalDetails.getUser().getId(), pageable), HttpStatus.OK);
     }
 
     @GetMapping("/post/popular")
-    public List<PostPreviewDto> getPopularPost() {
-        return postService.getPopularPost();
+    public ResponseEntity<?> getPopularPost() {
+        return new ResponseEntity<>(postService.getPopularPost(), HttpStatus.OK);
     }
 }
