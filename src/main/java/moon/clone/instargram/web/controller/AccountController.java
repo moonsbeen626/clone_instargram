@@ -28,11 +28,8 @@ public class AccountController {
     //회원가입
     @PostMapping("/signup")
     public String signup(@Valid UserSignupDto userSignupDto, BindingResult bindingResult) {
-        if (userService.save(userSignupDto) != null) {
-            return "redirect:/login";
-        } else {
-            return "redirect:/signup?error";
-        }
+        userService.save(userSignupDto);
+        return "redirect:/login";
     }
 
     //사용자 로그 아웃

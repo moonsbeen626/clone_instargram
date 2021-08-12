@@ -17,10 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
@@ -31,8 +33,8 @@ public class UserService {
     private final FollowRepository followRepository;
 
     @Transactional
-    public User save(UserSignupDto userSignupDto) throws RuntimeException {
-        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) return null;
+    public User save(UserSignupDto userSignupDto) {
+        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) throw new CustomValidationException("이미 존재하는 email입니다.");
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return userRepository.save(User.builder()
                 .email(userSignupDto.getEmail())
@@ -43,6 +45,19 @@ public class UserService {
                 .website(null)
                 .profileImgUrl(null)
                 .build());
+
+
+//        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) return null;
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        return userRepository.save(User.builder()
+//                .email(userSignupDto.getEmail())
+//                .password(encoder.encode(userSignupDto.getPassword()))
+//                .phone(userSignupDto.getPhone())
+//                .name(userSignupDto.getName())
+//                .title(null)
+//                .website(null)
+//                .profileImgUrl(null)
+//                .build());
     }
 
     @Value("${profileImg.path}")
@@ -50,7 +65,7 @@ public class UserService {
 
     @Transactional
     public void updateUser (UserUpdateDto userUpdateDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(() -> { return new CustomValidationException("찾을 수 없는 id입니다.");});
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(() -> { return new CustomValidationException("찾을 수 없는 user입니다.");});
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         String imageFileName = user.getId() + "_" + multipartFile.getOriginalFilename();
@@ -85,7 +100,7 @@ public class UserService {
     public UserProfileDto getUserProfileDto(long profileId, long sessionId) {
         UserProfileDto userProfileDto = new UserProfileDto();
 
-        User user = userRepository.getById(profileId);
+        User user = userRepository.findUserById(profileId);
         userProfileDto.setUser(user);
         userProfileDto.setPostCount(user.getPostList().size());
 

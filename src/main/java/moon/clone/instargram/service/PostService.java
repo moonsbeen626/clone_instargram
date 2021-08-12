@@ -39,6 +39,7 @@ public class PostService {
 
     @Value("${post.path}")
     private String uploadUrl;
+
     @Transactional
     public void save(PostUploadDto postUploadDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
         UUID uuid = UUID.randomUUID();
