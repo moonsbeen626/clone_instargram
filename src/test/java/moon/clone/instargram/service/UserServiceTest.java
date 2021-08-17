@@ -38,7 +38,6 @@ public class UserServiceTest {
 
     @Mock
     private User mock_user;
-    private User user;
 
     @Mock
     private PrincipalDetails principalDetails;
@@ -46,7 +45,7 @@ public class UserServiceTest {
     @Mock
     private MultipartFile multipartFile;
 
-
+    private User user;
 
     @BeforeEach
     public void setUp() {
@@ -60,14 +59,22 @@ public class UserServiceTest {
                 .website(null)
                 .profileImgUrl(null)
                 .build();
-//        System.out.println(user.getPostList() + " " + user.getId() + " " + user.getName() + " " + user.getPassword());
-//        System.out.println(mock_user.getPostList() + " " + mock_user.getId() + " " + mock_user.getName() + " " + mock_user.getPassword());
     }
+
+    public UserSignupDto createUserSignupDto() {
+       return UserSignupDto.builder()
+               .email(user.getEmail())
+               .password(user.getPassword())
+                .name(user.getName())
+               .phone(user.getPhone())
+               .build();
+    }
+
 
     @Test
     public void save_회원가입_성공() throws Exception {
         //given
-        UserSignupDto userSignupDto = UserSignupDto.builder().email(user.getEmail()).password(user.getPassword()).name(user.getName()).phone(user.getPhone()).build();
+        UserSignupDto userSignupDto = createUserSignupDto();
         given(userRepository.findUserByEmail(any())).willReturn(null);
         given(userRepository.save(any())).willReturn(user);
 
@@ -83,7 +90,7 @@ public class UserServiceTest {
     @Test
     public void save_회원가입_실패() throws Exception {
         //given
-        UserSignupDto userSignupDto = UserSignupDto.builder().email(user.getEmail()).password(user.getPassword()).name(user.getName()).phone(user.getPhone()).build();
+        UserSignupDto userSignupDto = createUserSignupDto();
         given(userRepository.findUserByEmail(any())).willReturn(user);
 
         //when
