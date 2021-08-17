@@ -66,7 +66,7 @@ public class PostService {
         PostInfoDto postInfoDto = new PostInfoDto();
         postInfoDto.setId(postId);
 
-        Post post = postRepository.findPostById(postId);
+        Post post = postRepository.findById(postId).get();
         postInfoDto.setTag(post.getTag());
         postInfoDto.setText(post.getText());
         postInfoDto.setPostImgUrl(post.getPostImgUrl());
@@ -80,7 +80,7 @@ public class PostService {
         postInfoDto.setCommentList(post.getCommentList());
 
         //포스트 주인의 정보를 가져온다.
-        User user = userRepository.findUserById(post.getUser().getId());
+        User user = userRepository.findById(post.getUser().getId()).get();
 
         postInfoDto.setPostUploader(user);
         if(sessionId == post.getUser().getId()) postInfoDto.setUploader(true);
@@ -92,7 +92,7 @@ public class PostService {
     @Transactional
     public PostDto getPostDto(long postId) {
         //예외 처리 필요 -> post의 작성자가 아닌 사람이 해당 페이지에 접근하여 수정하려고 한다면??
-        Post post = postRepository.findPostById(postId);
+        Post post = postRepository.findById(postId).get();
 
         PostDto postDto = PostDto.builder()
                 .id(postId)
@@ -106,13 +106,13 @@ public class PostService {
 
     @Transactional
     public void update(PostUpdateDto postUpdateDto) {
-        Post post = postRepository.findPostById(postUpdateDto.getId());
+        Post post = postRepository.findById(postUpdateDto.getId()).get();
         post.update(postUpdateDto.getTag(), postUpdateDto.getText());
     }
 
     @Transactional
     public void delete(long postId) {
-        Post post = postRepository.findPostById(postId);
+        Post post = postRepository.findById(postId).get();
 
         //관련된 likes의 정보 먼저 삭제해 준다.
         likesRepository.deleteLikesByPost(post);
@@ -124,11 +124,11 @@ public class PostService {
         File file = new File(uploadUrl + post.getPostImgUrl());
         file.delete();
 
-        postRepository.deletePostById(postId);
+        postRepository.deleteById(postId);
     }
 
     @Transactional
-    public Page<Post> mainStory(long sessionId, Pageable pageable) {
+    public Page<Post> getPost(long sessionId, Pageable pageable) {
         Page<Post> postList = postRepository.mainStory(sessionId, pageable);
 
         postList.forEach(post -> {
@@ -142,7 +142,7 @@ public class PostService {
     }
 
     @Transactional
-    public Page<Post> searchResult(String tag, long sessionId, Pageable pageable) {
+    public Page<Post> getTagPost(String tag, long sessionId, Pageable pageable) {
         Page<Post> postList = postRepository.searchResult(tag, pageable);
 
         postList.forEach(post -> {

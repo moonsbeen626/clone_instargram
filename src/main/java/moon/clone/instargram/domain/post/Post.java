@@ -61,10 +61,6 @@ public class Post {
         this.likesCount = likesCount;
     }
 
-    public void makePostById(long id) {
-        this.id = id;
-    }
-
     public void update(String tag, String text) {
         this.tag = tag;
         this.text = text;
@@ -78,7 +74,7 @@ public class Post {
         this.likesState = likesState;
     }
 
-    public void updatePostId(long id) {
+    public void makePost(long id) {
         this.id = id;
     }
 }

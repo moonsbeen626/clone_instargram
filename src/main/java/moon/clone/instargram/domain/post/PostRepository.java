@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Post findPostById(long id);
-    void deletePostById(long id);
 
     @Query(value = "SELECT * FROM post WHERE user_id IN (SELECT to_user_id FROM FOLLOW WHERE from_user_id = :sessionId) ORDER BY id DESC", nativeQuery = true)
     Page<Post> mainStory(long sessionId, Pageable pageable);

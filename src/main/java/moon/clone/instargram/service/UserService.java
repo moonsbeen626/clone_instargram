@@ -45,33 +45,19 @@ public class UserService {
                 .website(null)
                 .profileImgUrl(null)
                 .build());
-
-
-//        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) return null;
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        return userRepository.save(User.builder()
-//                .email(userSignupDto.getEmail())
-//                .password(encoder.encode(userSignupDto.getPassword()))
-//                .phone(userSignupDto.getPhone())
-//                .name(userSignupDto.getName())
-//                .title(null)
-//                .website(null)
-//                .profileImgUrl(null)
-//                .build());
     }
 
     @Value("${profileImg.path}")
     private String uploadFolder;
 
     @Transactional
-    public void updateUser (UserUpdateDto userUpdateDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
+    public void update(UserUpdateDto userUpdateDto, MultipartFile multipartFile, PrincipalDetails principalDetails) {
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(() -> { return new CustomValidationException("찾을 수 없는 user입니다.");});
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        String imageFileName = user.getId() + "_" + multipartFile.getOriginalFilename();
-        Path imageFilePath = Paths.get(uploadFolder + imageFileName);
-
-        if(multipartFile.getSize() != 0) { //파일이 업로드 되었는지 확인
+        if(!multipartFile.isEmpty()) { //파일이 업로드 되었는지 확인
+            String imageFileName = user.getId() + "_" + multipartFile.getOriginalFilename();
+            Path imageFilePath = Paths.get(uploadFolder + imageFileName);
             try {
                 if (user.getProfileImgUrl() != null) { // 이미 프로필 사진이 있을경우
                     File file = new File(uploadFolder + user.getProfileImgUrl());
@@ -100,12 +86,12 @@ public class UserService {
     public UserProfileDto getUserProfileDto(long profileId, long sessionId) {
         UserProfileDto userProfileDto = new UserProfileDto();
 
-        User user = userRepository.findUserById(profileId);
+        User user = userRepository.findById(profileId).orElseThrow(() -> { return new CustomValidationException("찾을 수 없는 user입니다.");});
         userProfileDto.setUser(user);
         userProfileDto.setPostCount(user.getPostList().size());
 
         // loginEmail 활용하여 currentId가 로그인된 사용자 인지 확인
-        User loginUser = userRepository.findUserById(sessionId);
+        User loginUser = userRepository.findById(sessionId).orElseThrow(() -> { return new CustomValidationException("찾을 수 없는 user입니다.");});
         userProfileDto.setLoginUser(loginUser.getId() == user.getId());
 
         // currentId를 가진 user가 loginEmail을 가진 user를 구독 했는지 확인

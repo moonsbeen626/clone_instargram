@@ -38,13 +38,13 @@ public class PostApiController {
 
     @GetMapping("/post")
     public ResponseEntity<?> mainStory(@AuthenticationPrincipal PrincipalDetails principalDetails, @PageableDefault(size=3) Pageable pageable) {
-        return new ResponseEntity<>(postService.mainStory(principalDetails.getUser().getId(), pageable), HttpStatus.OK);
+        return new ResponseEntity<>(postService.getPost(principalDetails.getUser().getId(), pageable), HttpStatus.OK);
     }
 
     @GetMapping("/post/tag")
     public ResponseEntity<?> searchTag(@RequestParam String tag, @AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @PageableDefault(size=3) Pageable pageable) {
-        return new ResponseEntity<>(postService.searchResult(tag, principalDetails.getUser().getId(), pageable), HttpStatus.OK);
+        return new ResponseEntity<>(postService.getTagPost(tag, principalDetails.getUser().getId(), pageable), HttpStatus.OK);
     }
 
     @GetMapping("/post/likes")

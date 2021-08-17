@@ -45,7 +45,7 @@ public class UserController {
     @PostMapping("/user/update")
     public String updateUser(@Valid UserUpdateDto userUpdateDto, BindingResult bindingResult, @RequestParam("profileImgUrl") MultipartFile multipartFile,
                              RedirectAttributes redirectAttributes, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        userService.updateUser(userUpdateDto, multipartFile, principalDetails);
+        userService.update(userUpdateDto, multipartFile, principalDetails);
         redirectAttributes.addAttribute("id", principalDetails.getUser().getId());
         return "redirect:/user/profile";
     }
