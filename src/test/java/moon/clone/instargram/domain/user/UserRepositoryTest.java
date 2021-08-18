@@ -20,21 +20,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserRepositoryTest {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    private User user;
 
     @BeforeEach
     public void setUp() {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        User user = User.builder()
-                .email("test@test")
-                .name("test")
-                .password(encoder.encode("test1234!"))
-                .phone("123123")
-                .title(null)
-                .website(null)
-                .profileImgUrl(null)
-                .build();
-        userRepository.save(user);
+        user = User.builder().email("test@test").name("test").password("asd")
+                .phone("123123").title(null).website(null).profileImgUrl(null).build();
     }
 
     @AfterEach
@@ -44,10 +37,13 @@ public class UserRepositoryTest {
 
     @Test
     public void findUserByEmail_성공() throws Exception {
+        //given
+        userRepository.save(user);
+
         //when
-        User user = userRepository.findUserByEmail("test@test");
+        User result = userRepository.findUserByEmail("test@test");
 
         //then
-        assertThat(user.getEmail()).isEqualTo("test@test");
+        assertThat(result.getEmail()).isEqualTo(user.getEmail());
     }
 }
