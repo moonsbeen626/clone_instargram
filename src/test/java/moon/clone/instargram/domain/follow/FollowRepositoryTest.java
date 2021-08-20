@@ -32,8 +32,10 @@ public class FollowRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        from_user = User.builder().email("from@email").name("from").password("asd").phone("asd").profileImgUrl(null).website(null).title(null).build();
-        to_user = User.builder().email("to@email").name("to").password("asd").phone("asd").profileImgUrl(null).website(null).title(null).build();
+        from_user = User.builder().email("from@email").name("from").password("asd").phone("asd")
+                .profileImgUrl(null).website(null).title(null).build();
+        to_user = User.builder().email("to@email").name("to").password("asd").phone("asd")
+                .profileImgUrl(null).website(null).title(null).build();
         userRepository.save(from_user);
         userRepository.save(to_user);
     }
@@ -45,13 +47,13 @@ public class FollowRepositoryTest {
     }
 
     @Test
-    public void findFollowByFromUserAndToUser_성공() {
+    public void findFollowByFromUserIdAndToUserId_성공() {
         //given
         Follow follow = new Follow(from_user, to_user);
         followRepository.save(follow);
 
         //when
-        Follow result = followRepository.findFollowByFromUserAndToUser(from_user, to_user);
+        Follow result = followRepository.findFollowByFromUserIdAndToUserId(from_user.getId(), to_user.getId());
 
         //then
         assertThat(result.getFromUser().getId()).isEqualTo(from_user.getId());

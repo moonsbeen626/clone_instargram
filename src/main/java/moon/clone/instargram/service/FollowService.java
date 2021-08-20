@@ -21,11 +21,8 @@ public class FollowService {
 
     @Transactional
     public void follow(long fromUserId, long toUserId) {
-        try {
-            followRepository.follow(fromUserId, toUserId);
-        } catch (Exception e) {
-            throw new CustomApiException("이미 팔로우 하였습니다.");
-        }
+        if(followRepository.findFollowByFromUserIdAndToUserId(fromUserId, toUserId) != null) throw new CustomApiException("이미 팔로우 하였습니다.");
+        followRepository.follow(fromUserId, toUserId);
     }
 
     @Transactional
@@ -40,7 +37,6 @@ public class FollowService {
         sb.append("if ((?=u.id), TRUE, FALSE) AS loginUser ");
         sb.append("FROM user u, follow f ");
         sb.append("WHERE u.id = f.from_user_id AND f.to_user_id = ?");
-
         // 쿼리 완성
         Query query = em.createNativeQuery(sb.toString())
                 .setParameter(1, loginId)

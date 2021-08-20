@@ -142,7 +142,7 @@ public class UserServiceTest {
     public void getUserProfileDto_성공() throws Exception {
         //given
         given(userRepository.findById(any())).willReturn(java.util.Optional.ofNullable(mock_user));
-        given(followRepository.findFollowByFromUserAndToUser(any(), any())).willReturn(null);
+        given(followRepository.findFollowByFromUserIdAndToUserId(user.getId(), user.getId())).willReturn(null);
         given(followRepository.findFollowerCountById(user.getId())).willReturn(0);
         given(followRepository.findFollowingCountById(user.getId())).willReturn(0);
 

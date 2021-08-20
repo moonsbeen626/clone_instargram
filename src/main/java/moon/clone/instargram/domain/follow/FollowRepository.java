@@ -8,7 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    Follow findFollowByFromUserAndToUser(User fromUser, User toUser);
+    //Follow findFollowByFromUserAndToUser(User fromUser, User toUser);
+    Follow findFollowByFromUserIdAndToUserId(long from_user_id, long to_user_id);
 
     @Query(value = "SELECT COUNT(*) FROM follow WHERE to_user_id = :profileId", nativeQuery = true)
     int findFollowerCountById(long profileId);

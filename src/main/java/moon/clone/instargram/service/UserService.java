@@ -95,7 +95,7 @@ public class UserService {
         userProfileDto.setLoginUser(loginUser.getId() == user.getId());
 
         // currentId를 가진 user가 loginEmail을 가진 user를 구독 했는지 확인
-        userProfileDto.setFollow(followRepository.findFollowByFromUserAndToUser(loginUser, user) != null);
+        userProfileDto.setFollow(followRepository.findFollowByFromUserIdAndToUserId(loginUser.getId(), user.getId()) != null);
 
         //currentId를 가진 user의 팔로워, 팔로잉 수를 확인한다.
         userProfileDto.setUserFollowerCount(followRepository.findFollowerCountById(profileId));
