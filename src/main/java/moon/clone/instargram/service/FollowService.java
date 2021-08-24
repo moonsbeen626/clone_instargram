@@ -46,6 +46,7 @@ public class FollowService {
         //JPA 쿼리 매핑 - DTO에 매핑
         JpaResultMapper result = new JpaResultMapper();
         List<FollowDto> followDtoList = result.list(query, FollowDto.class);
+        System.out.println("in service " + followDtoList);
         return followDtoList;
     }
 
