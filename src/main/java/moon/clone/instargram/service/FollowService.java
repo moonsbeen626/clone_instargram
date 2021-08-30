@@ -30,6 +30,7 @@ public class FollowService {
         followRepository.unFollow(fromUserId, toUserId);
     }
 
+    @Transactional
     public List<FollowDto> getFollower(long profileId, long loginId) {
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT u.id, u.name, u.profile_img_url, ");
@@ -46,10 +47,10 @@ public class FollowService {
         //JPA 쿼리 매핑 - DTO에 매핑
         JpaResultMapper result = new JpaResultMapper();
         List<FollowDto> followDtoList = result.list(query, FollowDto.class);
-        System.out.println("in service " + followDtoList);
         return followDtoList;
     }
 
+    @Transactional
     public List<FollowDto> getFollowing(long profileId, long loginId) {
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT u.id, u.name, u.profile_img_url, ");
