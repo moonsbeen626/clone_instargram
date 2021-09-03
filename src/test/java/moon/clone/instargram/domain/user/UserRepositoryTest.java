@@ -36,7 +36,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void findUserByEmail_성공() throws Exception {
+    public void findUserByEmail_성공() {
         //given
         userRepository.save(user);
 

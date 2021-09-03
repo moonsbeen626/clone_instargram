@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface LikesRepository extends JpaRepository<Likes, Long> {
-    Likes findLikesByPostAndUser(Post post, User user);
     void deleteLikesByPost(Post post);
 
     @Modifying
