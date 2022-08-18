@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<head th:fragment="head(title)">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Instagram</title>
+
+    <link href="/style/common.css" rel="stylesheet" type="text/css" />
+    <link href="/style/story.css" rel="stylesheet" type="text/css" />
+    <link href="/style/profile.css" rel="stylesheet" type="text/css" />
+    <link href="/style/update.css" rel="stylesheet" type="text/css" />
+    <link href="/style/upload.css" rel="stylesheet" type="text/css" />
+
+    <!-- favicon -->
+    <link rel="icon" href="/img/favicon.png">
+    <link rel="instagram-icon" href="/img/favicon.png">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<nav th:fragment="menu(menu)">
+    <input type="hidden" id="principalId" value="${#authentication.getPrincipal().getUser().getId()})}"/>
+    <div class="nav-container">
+        <div class="nav-1">
+            <img class="logo_instagram" src="/img/logo_text.png" alt="logo_text">
+        </div>
+        <form action="/post/searchForm" method="post"><input id="tag" name="tag" type="text" class="input-search" placeholder="검색"></form>
+        <div class="nav-2">
+            <a href="/post/story"><img src="/img/home.png" alt="홈"></a>
+            <a href="/post/popular"><img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색"></a>
+            <a href="/post/likes"><img  src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트"></a>
+            <a th:href="@{/user/profile(id=${#authentication.getPrincipal().getUser().getId()})}" ><img class="pic" th:src="@{${'/profile_imgs/' + #authentication.getPrincipal().getUser().getProfileImgUrl}}" onerror="this.src='/img/default_profile.jpg';"></a>
+        </div>
+    </div>
+</nav>
+
+<footer th:fragment="footer(footer)">
+    <p class="insta-sccript">
+        소개 ∙ 도움말 ∙ 홍보 센터 ∙ API ∙ 채용 정보 ∙ 개인정보처리방침 ∙ <br>약관 ∙ 위치 ∙ 인기계정 ∙ 해시태그 ∙ 언어
+        <br><br>
+        © 2021 INSTAGRAM FROM FACEBOOK
+    </p>
+</footer>
+</body>
+</html>

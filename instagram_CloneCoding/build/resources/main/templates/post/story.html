@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/common :: head('Instargram')"></head>
+<body>
+<!-- main -->
+<head th:replace="layout/common :: menu('menu')"></head>
+<main class="main">
+    <div class="feeds" id="feeds">
+        <!-- 스토리 피드 리스트 시작 -->
+        <!-- 스토리 피드 리스트  끝-->
+    </div>
+    <div class="main-right">
+        <div class="myProfile">
+            <a th:href="@{/user/profile(id=${#authentication.getPrincipal().getUser().getId()})}" ><img class="pic" th:src="@{${'/profile_imgs/' + #authentication.getPrincipal().getUser().getProfileImgUrl}}" onerror="this.src='/img/default_profile.jpg'; "/></a>
+            <div>
+                <span class="userID point-span" th:text="${#authentication.getPrincipal().getUser().getName()}"></span>
+                <span class="sub-span" th:text="${#authentication.getPrincipal().getUser().getTitle()}"></span>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="layout/common :: footer('footer')"></footer>
+<script th:inline="javascript">
+    /*[# sec:authorize="isAuthenticated()"]*/
+    let principalId = /*[[${#authentication.principal.user.id}]]*/
+    /*[/]*/
+</script>
+<script src="/js/story.js"></script>
+</body>
+</html>
