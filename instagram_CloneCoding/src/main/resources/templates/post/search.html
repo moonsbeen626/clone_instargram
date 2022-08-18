@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="layout/common :: head('Instargram')"></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<head th:replace="layout/common :: menu('menu')"></head>
+<main class="main">
+    <div class="feeds" id="feeds">
+        <!-- 검색 피드 리스트 시작 -->
+        <!-- 검색 피드 리스트  끝-->
+    </div>
+    <div class="main-right">
+        <div class="myProfile">
+            <a th:href="@{/user/profile(id=${#authentication.getPrincipal().getUser().getId()})}" ><img class="pic" th:src="@{${'/profile_imgs/' + #authentication.getPrincipal().getUser().getProfileImgUrl}}" onerror="this.src='/img/default_profile.jpg'; "/></a>
+            <div>
+                <span class="userID point-span" th:text="${#authentication.getPrincipal().getUser().getName()}"></span>
+                <span class="sub-span" th:text="${#authentication.getPrincipal().getUser().getTitle()}"></span>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="layout/common :: footer('footer')"></footer>
+</body>
+<script th:inline="javascript">
+    /*[# sec:authorize="isAuthenticated()"]*/
+    let tag = /*[[${tag}]]*/
+    /*[/]*/
+</script>
+<script src="/js/search.js"></script>
+</html>

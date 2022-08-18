@@ -1,0 +1,58 @@
+#btn_signup {
+    width: 270px;
+    height: 30px;
+    margin: 13px auto;
+    background-color: #0095f6;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+#btn_signup:disabled {
+    background-color: #B9DFFC;
+}
+#btn_signup:disabled:hover {
+    cursor: default;
+}
+#btn_signup:enabled:hover {
+    cursor: pointer;
+}
+#btn_signup:focus {
+    outline: none;
+}
+
+.input_signup {
+    width: 250px;
+    height: 40px;
+    margin: 3px auto;
+    padding: 0 10px;
+    display: block;
+    background-color: #fafafa;
+    border: 1px solid #DBDBDB;
+    border-radius: 3px;
+    font-size: 14px;
+}
+.input_signup::placeholder {
+    font-size: 12px;
+    color: #8e8e8e;
+}
+.input_signup:focus {
+    border: 1px solid #8a8a8a;
+    outline: none;
+}
+
+.button_login {
+    color : #00366B;
+    align-self: center;
+    font-size: 12px;
+    margin-top: 10px;
+    text-decoration:none
+}
+.button_login:hover {
+    cursor: pointer;
+}
+
+.email_input_check {
+    color: red;
+}

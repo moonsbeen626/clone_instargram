@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+    font-family: 'helvetica neue', 'Apple SD Gothic Neo', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    padding-top: 0;
+    margin: 0;
+}
+p, span {
+    font-size: 14px;
+}
+
+.likes-section {
+    margin-top: 20px;
+}

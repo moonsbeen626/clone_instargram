@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="layout/common :: head('Instargram')"></head>
+<body>
+<head th:replace="layout/common :: menu('menu')"></head>
+<!--사진 업로드페이지 중앙배치-->
+<main class="uploadContainer">
+    <!--사진업로드 박스-->
+    <section class="upload">
+
+        <!--사진업로드 로고-->
+        <div class="upload-top">
+            <a href="/user/story.html" class="">
+                <img src="/img/logo_text.png" alt="">
+            </a>
+        </div>
+        <!--사진업로드 로고 end-->
+
+        <!--사진업로드 Form-->
+        <form class="upload-form" action="/post/update" method="post">
+            <div class="upload-img">
+                <img th:src="@{${'/upload/' + postDto.postImgUrl}}" alt="" id="imageUploadPreview" />
+            </div>
+
+            <!--사진설명 + 업로드버튼-->
+            <div class="upload-form-detail">
+                <input type="hidden" id="id" name="id" th:value="${postDto.id}">
+                <textarea class="input_upload" th:text="${postDto.text}" name="text" id="text" rows="5"> </textarea>
+                <input type="text" th:value="${postDto.tag}" placeholder="태그. 공백 없이 ,로 구분하여 입력해주세요." name="tag" id="tag" />
+            </div>
+            <!--사진설명end-->
+            <button id="btn_change" class="cta blue" >수정</button>
+        </form>
+        <form class="delete-form" action="/post/delete" method="post">
+            <input type="hidden" id="postId" name="postId" th:value="${postDto.id}">
+            <button id="btn_delete" class="cta blue" >삭제</button>
+        </form>
+        <!--사진업로드 Form-->
+    </section>
+    <!--사진업로드 박스 end-->
+</main>
+<br/><br/>
+<footer th:replace="layout/common :: footer('footer')"></footer>
+</body>
+</html>
